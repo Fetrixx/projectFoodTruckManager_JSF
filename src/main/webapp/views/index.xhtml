@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="jakarta.tags.core">
+
+    <h:head>
+        <title>FoodTruck Manager - Inicio</title>
+        <ui:insert name="head" />
+        <h:outputStylesheet name="styles/global.css" /> <!-- Referencia al CSS global -->
+    </h:head>
+
+    <h:body>
+        <ui:composition template="../templates/base.xhtml">
+            <ui:define name="title">
+                Inicio - FoodTruck Manager
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="mainForm">
+                    <div class="foodtruck-manager-container">
+                        <!-- Sección de bienvenida -->
+                        <div class="welcome-container card foodtruck-card p-8 mb-12">
+                            <h1 class="foodtruck-heading text-center text-3xl text-primary mb-6">🍔 Bienvenido a FoodTruck Manager</h1>
+                            <p class="text-center text-textSecondary mb-8">Gestiona tu parque de food trucks de manera eficiente y atractiva</p>
+
+                            <div class="info-box bg-orange-50 border border-orange-100 rounded-lg p-6 mb-6">
+                                <h2 class="foodtruck-heading text-secondary text-xl mb-4 text-center">¿Qué puedes hacer?</h2>
+                                <ul class="list-disc pl-6 space-y-2">
+                                    <li>Gestionar reservas de espacios</li>
+                                    <li>Controlar calendario de eventos</li>
+                                    <li>Administrar información de food trucks</li>
+                                    <li>Recibir comentarios de clientes</li>
+                                    <li>Generar reportes de desempeño</li>
+                                </ul>
+                            </div>
+
+                            <p class="text-center text-accent font-semibold">
+                                ¡Comienza a explorar todas las funciones usando el menú superior!
+                            </p>
+                        </div>
+
+                        <!-- Food Trucks Disponibles -->
+                        <section class="foodtrucks-section">
+                            <div class="section-title">
+                                <h2 class="foodtruck-heading">Food Trucks Disponibles</h2>
+                            </div>
+
+                            <div class="foodtrucks-grid">
+                                <ui:repeat value="#{indexBean.foodTrucks}" var="ft">
+                                    <div class="card foodtruck-card">
+                                        <div class="card-image">
+                                            <p:graphicImage value="#{ft.imagen}" alt="#{ft.nombre}" rendered="#{not empty ft.imagen}" />
+                                            <h:panelGroup rendered="#{empty ft.imagen}">
+                                                <div class="bg-gray-200 border-2 border-dashed w-full h-full flex items-center justify-center">
+                                                    <i class="pi pi-image" style="font-size: 3rem; color: #9CA3AF;"></i>
+                                                </div>
+                                            </h:panelGroup>
+
+                                        </div>
+
+                                        <div class="card-content">
+                                            <div class="flex justify-between items-start">
+                                                <h3 class="text-xl font-semibold">#{ft.nombre}</h3>
+                                                <span class="rating-badge bg-#{ft.avg_rating >= 4 ? 'green' : (ft.avg_rating >= 3 ? 'yellow' : 'red')}-100 text-#{ft.avg_rating >= 4 ? 'green' : (ft.avg_rating >= 3 ? 'yellow' : 'red')}-800 text-sm font-medium px-2.5 py-0.5 rounded">
+                                                    #{ft.avg_rating}
+                                                </span>
+                                            </div>
+
+                                            <ui:repeat value="#{[1,2,3,4,5]}" var="i">
+                                                <c:choose>
+                                                    <c:when test="#{i le ft.avgRating}">
+                                                        <i class="pi pi-star-fill" style="color: #F97316;"></i>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <i class="pi pi-star" style="color: #F97316;"></i>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </ui:repeat>
+
+                                            <div class="location">
+                                                <i class="pi pi-map-marker"></i>
+                                                <span>#{ft.ubicacion}</span>
+                                            </div>
+
+                                            <p class="description">#{ft.descripcion}</p>
+
+                                            <div class="actions">
+                                                <p:link value="Ver menú" outcome="menu">
+                                                    <f:param name="foodtruck_id" value="#{ft.id}" />
+                                                    <i class="pi pi-book"></i>
+                                                </p:link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ui:repeat>
+                            </div>
+                        </section>
+
+                        <!-- Funcionalidades Clave -->
+                        <section class="functionalities-section">
+                            <div class="section-title">
+                                <h2 class="foodtruck-heading">Funcionalidades Clave</h2>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="card feature-card">
+                                    <i class="pi pi-calendar"></i>
+                                    <h3>Reserva de Turnos</h3>
+                                    <p>Sistema inteligente para evitar filas con horarios programados</p>
+                                </div>
+
+                                <div class="card feature-card">
+                                    <i class="pi pi-book"></i>
+                                    <h3>Menú Digital</h3>
+                                    <p>Catálogo con fotos y precios actualizados</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Funcionalidades Extra -->
+                        <section class="extra-features">
+                            <h2 class="foodtruck-heading">¡Funcionalidades Extra!</h2>
+
+                            <div class="extra-grid">
+                                <div class="extra-card">
+                                    <i class="pi pi-star"></i>
+                                    <h3>Sistema de Reseñas</h3>
+                                    <p>Califica tus food trucks favoritos y comparte tu experiencia</p>
+                                </div>
+
+                                <div class="extra-card">
+                                    <i class="pi pi-heart"></i>
+                                    <h3>Favoritos</h3>
+                                    <p>Guarda tus puestos preferidos para acceso rápido</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Dialogo para Reseñas -->
+                    <p:dialog header="Reseñas" widgetVar="reviewsDialog" modal="true">
+                        <h:panelGroup>
+                            <h:outputText value="#{indexBean.reviews}" escape="false"/>
+                        </h:panelGroup>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

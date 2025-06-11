@@ -1,0 +1,345 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Contacto - FoodTruck Manager</title>
+    <ui:insert name="head" />
+    
+    <style>
+        /* Variables de colores */
+        :root {
+            --primary: #EF4444;
+            --secondary: #F97316;
+            --accent: #10B981;
+            --background: #FFF7ED;
+            --text-primary: #1F2937;
+            --text-secondary: #4B5563;
+            --light-gray: #F3F4F6;
+            --white: #FFFFFF;
+        }
+        
+        /* Fuentes */
+        
+        
+        body {
+            background-color: var(--background);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Contenedor principal */
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        /* Cabecera */
+        .contact-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .contact-header h1 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .contact-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Tarjeta de contacto */
+        .contact-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .contact-card:before {
+            content: "";
+            display: block;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        /* Formulario */
+        .form-section {
+            padding: 40px;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .form-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--text-primary);
+        }
+        
+        /* Estilos para componentes PrimeFaces */
+        .contact-form .ui-outputlabel {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        .contact-form .ui-inputtext,
+        .contact-form .ui-inputtextarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            background: var(--light-gray);
+        }
+
+        .contact-form .ui-inputtext:focus,
+        .contact-form .ui-inputtextarea:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+            outline: none;
+        }
+        
+        .contact-form .ui-button {
+            width: 100%;
+            padding: 14px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            background: var(--secondary);
+            border: none;
+            transition: all 0.3s ease;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .contact-form .ui-button:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
+        }
+        
+        .contact-form .ui-button:active {
+            transform: translateY(0);
+        }
+        
+        /* Información de contacto */
+        .info-section {
+            padding: 40px;
+            background: rgba(239, 68, 68, 0.05);
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .info-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--text-primary);
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .contact-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+        }
+        
+        .contact-details h3 {
+            font-weight: 600;
+            margin: 0 0 5px 0;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+        
+        .contact-details p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+        }
+        
+        /* Horario de atención */
+        .business-hours {
+            background: rgba(249, 115, 22, 0.08);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .business-hours h3 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 15px 0;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        
+        .hours-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .hours-item {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e5e7eb;
+        }
+        
+        .hours-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .hours-day {
+            font-weight: 500;
+        }
+        
+        .hours-time {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .contact-card {
+                flex-direction: column;
+            }
+            
+            .form-section, .info-section {
+                padding: 30px 20px;
+            }
+            
+            .contact-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <ui:composition template="../templates/base.xhtml">
+        <ui:define name="title">
+            Contacto - FoodTruck Manager
+        </ui:define>
+        
+        <ui:define name="content">
+            <div class="contact-container">
+                <div class="contact-header">
+                    <h1>Contáctenos</h1>
+                    <p>¿Tiene alguna pregunta o comentario? Complete el formulario o utilice nuestra información de contacto.</p>
+                </div>
+                
+                <div class="contact-card">
+                    <!-- Formulario de contacto -->
+                    <div class="form-section">
+                        <h2>Envíenos un mensaje</h2>
+                        <h:form styleClass="contact-form">
+                            <p:outputLabel for="nombre" value="Nombre completo" />
+                            <p:inputText id="nombre" placeholder="Ingrese su nombre completo" />
+                            
+                            <p:outputLabel for="email" value="Correo electrónico" />
+                            <p:inputText id="email" placeholder="Ingrese su correo electrónico" />
+                            
+                            <p:outputLabel for="mensaje" value="Mensaje" />
+                            <p:inputTextarea id="mensaje" rows="6" placeholder="Escriba su mensaje aquí..." />
+                            
+                            <p:commandButton value="Enviar Mensaje" />
+                        </h:form>
+                    </div>
+                    
+                    <!-- Información de contacto -->
+                    <div class="info-section">
+                        <h2>Información de contacto</h2>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="pi pi-phone"></i>
+                                </div>
+                                <div class="contact-details">
+                                    <h3>Teléfono</h3>
+                                    <p>+595 99 999 9999</p>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="pi pi-envelope"></i>
+                                </div>
+                                <div class="contact-details">
+                                    <h3>Email</h3>
+                                    <p>contacto@foodtruckmanager.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="pi pi-map-marker"></i>
+                                </div>
+                                <div class="contact-details">
+                                    <h3>Ubicación</h3>
+                                    <p>Av. Principal 123, Ciudad</p>
+                                </div>
+                            </div>
+                            
+                            <div class="business-hours">
+                                <h3>Horario de atención</h3>
+                                <div class="hours-list">
+                                    <div class="hours-item">
+                                        <span class="hours-day">Lunes - Viernes</span>
+                                        <span class="hours-time">9:00 AM - 6:00 PM</span>
+                                    </div>
+                                    <div class="hours-item">
+                                        <span class="hours-day">Sábados</span>
+                                        <span class="hours-time">10:00 AM - 2:00 PM</span>
+                                    </div>
+                                    <div class="hours-item">
+                                        <span class="hours-day">Domingos</span>
+                                        <span class="hours-time">Cerrado</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

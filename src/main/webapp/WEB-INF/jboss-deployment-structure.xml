@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+    <deployment>
+        <!-- Excluye el logging de Java EE para usar SLF4J -->
+        <exclusions>
+            <module name="javaee.api" />
+            <module name="javax.api" />
+            <module name="org.jboss.logging" />
+        </exclusions>
+        
+        <dependencies>
+            <!-- Agrega dependencia a SLF4J -->
+            <module name="org.slf4j" />
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>

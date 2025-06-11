@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="primefaces"
+      >
+    <h:head>
+        <title>Login</title>
+        <h:outputStylesheet library="css" name="styles.css"/>
+    </h:head>
+    <h:body>
+        <div class="login-container">
+            <h:form>
+                <p:panel header="🍔 FoodTruck Park Manager" style="width: 350px">
+                    <h2>Acceso al Sistema</h2>
+                    <p:messages  showDetail="true" /> <!-- autoUpdate="true" -->
+
+                    <p:outputLabel for="email" value="Correo:" />
+                    <p:inputText id="email" value="#{loginBean.email}" required="true"
+                                 placeholder="tu@email.com" style="width: 100%">
+                        <!--<f:validator validatorId="jakarta.faces.Email" />-->
+                    </p:inputText>
+
+                    <p:outputLabel for="password" value="Contraseña:" style="margin-top: 15px"/>
+                    <p:password id="password" value="#{loginBean.password}" required="true" 
+                                feedback="false" style="width: 100%"/>
+
+                    <p:commandButton value="Ingresar al sistema" action="#{loginBean.login()}" 
+                                     styleClass="p-button-primary" style="margin-top: 20px; width: 100%"
+                                     update="@form"/>
+                </p:panel>
+            </h:form>
+        </div>
+    </h:body>
+</html>

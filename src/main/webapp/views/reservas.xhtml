@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Dashboard de Reservas</title>
+    <h:outputStylesheet name="styles/global.css" />
+</h:head>
+
+<h:body>
+    <ui:composition template="../templates/base.xhtml">
+        <ui:define name="title">
+            Dashboard de Reservas
+        </ui:define>
+
+        <ui:define name="content">
+            <h:form id="reservasForm">
+                <h2 class="text-center">Dashboard de Reservas</h2>
+
+                <h:messages globalOnly="true" layout="table" />
+
+                <p:dataGrid value="#{reservaBean.reservas}" var="reserva" columns="3">
+                    <p:panel>
+                        <h:panelGrid columns="1">
+                            <h:outputText value="#{reserva.foodtruckId}" />
+                            <h:outputText value="#{reserva.fecha}" />
+                            <h:outputText value="#{reserva.hora}" />
+                            <h:outputText value="#{reserva.total}" />
+                            <h:outputText value="#{reserva.estado}" />
+
+                            <p:commandButton value="Eliminar" 
+                                             action="#{reservaBean.deleteReserva(reserva.id)}" 
+                                             update="reservasForm" 
+                                             oncomplete="PF('successDialog').show();" />
+                            <p:commandButton value="Cancelar" 
+                                             action="#{reservaBean.cancelReserva(reserva.id)}" 
+                                             update="reservasForm" 
+                                             oncomplete="PF('successDialog').show();" />
+                            <p:commandButton value="Confirmar" 
+                                             action="#{reservaBean.completeReserva(reserva.id)}" 
+                                             update="reservasForm" 
+                                             oncomplete="PF('successDialog').show();" />
+                        </h:panelGrid>
+                    </p:panel>
+                </p:dataGrid>
+
+                <h:panelGroup rendered="#{empty reservaBean.reservas}">
+                    <h:outputText value="No hay reservas registradas." />
+                </h:panelGroup>
+
+                <p:dialog header="Éxito" widgetVar="successDialog" modal="true" closable="true">
+                    <h:outputText value="Operación realizada con éxito." />
+                    <p:commandButton value="Cerrar" 
+                                     onclick="PF('successDialog').hide();" 
+                                     type="button" />
+                </p:dialog>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

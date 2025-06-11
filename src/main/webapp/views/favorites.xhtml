@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="jakarta.tags.core">
+
+    <h:head>
+        <title>Mis Favoritos - FoodTruck Manager</title>
+        <ui:insert name="head" />
+        <h:outputStylesheet name="styles/global.css" />
+    </h:head>
+
+    <h:body>
+        <ui:composition template="../templates/base.xhtml">
+            <ui:define name="title">
+                Mis Favoritos - FoodTruck Manager
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="favoritesForm">
+                    <h2 class="text-center">Tus Food Trucks Favoritos</h2>
+
+                    <h:messages globalOnly="true" layout="table" />
+
+                    <p:dataGrid value="#{favoritesBean.favoritos}" var="foodtruck" columns="3" rowIndexVar="rowIndex">
+                        <p:panel>
+                            <h:panelGrid columns="1">
+                                <h:outputText value="#{foodtruck.nombre}" styleClass="font-bold" />
+                                <p:graphicImage value="#{foodtruck.imagen}" alt="#{foodtruck.nombre}" 
+                                                rendered="#{not empty foodtruck.imagen}" />
+                                <h:panelGroup rendered="#{empty foodtruck.imagen}">
+                                    <div class="bg-gray-200 border-2 border-dashed w-full h-full flex items-center justify-center">
+                                        <i class="pi pi-image" style="font-size: 3rem; color: #9CA3AF;"></i>
+                                    </div>
+                                </h:panelGroup>
+                                <h:outputText value="#{foodtruck.descripcion}" />
+
+                                <p:commandButton value="Eliminar" 
+                                                 action="#{favoritesBean.deleteFavorito(foodtruck.id)}" 
+                                                 update="@form" 
+                                                 oncomplete="PF('confirmDialog').show();" />
+                                <p:commandButton value="Reservar" 
+                                                 action="#{favoritesBean.redirectToBooking(foodtruck.id)}" 
+                                                 ajax="false" />
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:dataGrid>
+
+                    <h:panelGroup rendered="#{empty favoritesBean.favoritos}">
+                        <h:outputText value="Aún no tienes food trucks favoritos" />
+                    </h:panelGroup>
+
+                    <p:dialog header="Confirmación" widgetVar="confirmDialog" modal="true" closable="false">
+                        <h:outputText value="¿Seguro que quieres eliminar este favorito?" />
+                        <p:commandButton value="Sí" 
+                                         action="#{favoritesBean.confirmDelete}" 
+                                         update="favoritesForm" 
+                                         oncomplete="PF('confirmDialog').hide();" />
+                        <p:commandButton value="No" 
+                                         onclick="PF('confirmDialog').hide();" 
+                                         type="button" />
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

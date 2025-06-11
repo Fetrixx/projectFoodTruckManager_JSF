@@ -1,0 +1,554 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jun 8, 2025, 7:02:47 PM
+    Author     : Elias
+*/
+/* ========== VARIABLES Y ESTILOS GLOBALES ========== */
+:root {
+    --primary: #EF4444;     /* Rojo */
+    --secondary: #F97316;   /* Naranja */
+    --accent: #10B981;      /* Verde */
+    --background: #FFF7ED;  /* Fondo crema */
+    --textPrimary: #1F2937; /* Texto oscuro */
+    --textSecondary: #4B5563; /* Texto gris */
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --radius: 12px;
+}
+
+/* Importar fuentes */
+/*@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@300;400;600&display=swap');*/
+
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--textPrimary);
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.6;
+}
+
+/* ========== COMPONENTES PRINCIPALES ========== */
+
+/* Contenedor principal */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Navbar - Menú principal */
+.ui-menubar.custom-navbar {
+    background-color: var(--primary) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0.75rem 1.5rem !important;
+    box-shadow: var(--shadow);
+    font-family: 'Poppins', sans-serif;
+}
+
+.custom-navbar .ui-menuitem-link {
+    color: white !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.custom-navbar .ui-menuitem-link:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.custom-navbar .ui-menuitem-link .ui-menuitem-icon {
+    margin-right: 0.5rem;
+}
+
+.custom-navbar .ui-menuitem-text.logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.custom-navbar .ui-menuitem-link {
+    color: white !important; /* Texto blanco */
+}
+
+.custom-navbar .ui-menuitem-icon {
+    color: white !important; /* Iconos blancos */
+}
+
+.custom-navbar .ui-submenu-icon {
+    color: white !important; /* Icono de flecha del submenu */
+}
+
+.custom-navbar .ui-menuitem-text {
+    color: white !important; /* Texto de los items */
+}
+
+.custom-navbar .ui-menu-child .ui-menuitem-link {
+    color: white !important;
+}
+
+.custom-navbar .ui-menu-child .ui-menuitem-link:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Botón de logout */
+.ui-button-warning {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-color: transparent !important;
+    color: white !important;
+}
+
+.ui-button-warning:hover {
+    background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Botones */
+.ui-button {
+    transition: all 0.3s ease !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px;
+    border-radius: 8px !important;
+}
+
+.ui-button-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.ui-button-primary:hover {
+    background-color: #dc2626 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
+.ui-button-warning {
+    background-color: var(--secondary) !important;
+    border-color: var(--secondary) !important;
+}
+
+/* Panel de administración */
+.admin-item .ui-menuitem-link {
+    color: #ffd54f !important;
+    font-weight: 600 !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ========== PÁGINA DE INICIO ========== */
+.welcome-container {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2.5rem;
+    margin-top: 2rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.welcome-container h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.25rem;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.welcome-container p {
+    color: var(--textSecondary);
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* ========== FOOTER ========== */
+footer {
+    background-color: var(--textPrimary);
+    color: white;
+    padding: 1.5rem 0;
+    text-align: center;
+    margin-top: auto;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ========== UTILIDADES ========== */
+.font-heading {
+    font-family: 'Fredoka One', cursive !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
+}
+
+.p-4 {
+    padding: 1.5rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .custom-navbar .ui-menubar-start {
+        flex: 1;
+        justify-content: space-between;
+    }
+
+    .custom-navbar .ui-menuitem-text {
+        display: none;
+    }
+
+    .custom-navbar .ui-menuitem-icon {
+        margin-right: 0;
+        font-size: 1.25rem;
+    }
+
+    .welcome-container {
+        padding: 1.5rem;
+    }
+}
+
+
+/* CONTENEDOR DE LOGIN - Estilo principal */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+    background-color: var(--background);
+}
+
+/* PANEL DE LOGIN - Card estilo FoodTruck */
+.login-container .ui-panel {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border: none;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Encabezado del panel */
+.login-container .ui-panel .ui-panel-titlebar {
+    background: var(--primary);
+    color: white;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 1.2rem;
+    border: none;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+/* Contenido del panel */
+.login-container .ui-panel .ui-panel-content {
+    padding: 2rem;
+}
+
+/* Etiquetas */
+.login-container .ui-outputlabel {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--textSecondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Campos de entrada */
+.login-container .ui-inputtext,
+.login-container .ui-password input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.login-container .ui-inputtext:focus,
+.login-container .ui-password input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    outline: none;
+}
+
+/* Botón de login */
+.login-container .ui-button {
+    background: var(--primary);
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.login-container .ui-button:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
+.login-container .ui-button:active {
+    transform: translateY(0);
+}
+
+/* Mensajes de error */
+.login-container .ui-messages {
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.login-container .ui-messages-error {
+    background: #fee2e2;
+    border-color: #fecaca;
+    color: #b91c1c;
+    padding: 10px 15px;
+}
+
+/* Iconos */
+.login-container .ui-password .ui-icon {
+    color: var(--textSecondary);
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .login-container .ui-panel {
+        width: 95%;
+    }
+}
+
+
+/* ========== ESTILOS PARA CONTACTO ========== */
+.custom-shadow {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el formulario de contacto */
+.contact-form .ui-inputtext,
+.contact-form .ui-inputtextarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    transition: all 0.3s ease;
+}
+
+.contact-form .ui-inputtext:focus,
+.contact-form .ui-inputtextarea:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+    outline: none;
+}
+
+/* Estilos para la sección de integrantes */
+.integrante-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.integrante-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el carrusel */
+#carousel {
+    scroll-behavior: smooth;
+}
+
+/* Oculta scrollbar en navegadores modernos */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+}
+
+/* Estilos para el modal de imágenes */
+#imageModal {
+    transition: opacity 0.3s ease;
+}
+
+/* Estilos para botones de navegación del carrusel */
+.carousel-nav-btn {
+    background-color: rgba(249, 115, 22, 0.5);
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.carousel-nav-btn:hover {
+    background-color: rgba(249, 115, 22, 0.8);
+    transform: scale(1.1);
+}
+
+/* Estilos para el mapa */
+#map {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/* Estilos para la sección de contacto */
+.contact-info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.contact-info-item i {
+    color: var(--primary);
+    margin-right: 0.75rem;
+    font-size: 1.25rem;
+}
+
+
+
+/* Sección de food trucks */
+.foodtrucks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Sección de funcionalidades extra */
+.extra-features {
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.extra-features h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.extra-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.extra-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.extra-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+}
+
+.extra-card i {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.extra-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+
+/* Variables */
+:root {
+    --primary: #EF4444;
+    --secondary: #F97316;
+    --accent: #10B981;
+    --background: #FFF7ED;
+    --text-primary: #1F2937;
+    --text-secondary: #4B5563;
+    --light-gray: #F3F4F6;
+    --white: #FFFFFF;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Fuentes */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background);
+    color: var(--text-primary);
+}
+
+.foodtruck-heading {
+    font-family: 'Fredoka One', cursive;
+}
+
+/* Estilos generales */
+.foodtruck-manager-container {
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.section-title h2 {
+    font-size: 2.5rem;
+    color: var(--primary);
+}
+
+.card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}

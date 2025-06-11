@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="jakarta.tags.core">
+
+    <h:head>
+        <title>Sistema de Reseñas - FoodTruck Manager</title>
+        <ui:insert name="head" />
+        <h:outputStylesheet name="styles/global.css" />
+    </h:head>
+
+    <h:body>
+        <ui:composition template="../templates/base.xhtml">
+            <ui:define name="title">
+                Sistema de Reseñas - FoodTruck Manager
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="reviewForm">
+                    <section class="max-w-6xl mx-auto bg-white rounded-lg custom-shadow p-8 my-12">
+                        <h2 class="foodtruck-heading text-3xl text-primary mb-8 text-center">Sistema de Reseñas</h2>
+
+                        <p:messages id="messages" globalOnly="true" styleClass="error-message mb-4 text-red-600 font-semibold" />
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Formulario de reseña -->
+                            <div class="space-y-6">
+                                <h3 class="text-xl font-semibold text-primary">Deja tu reseña</h3>
+                                <h:inputHidden id="formAction" value="#{reviewsBean.action}" />
+                                <h:inputHidden id="reviewId" value="#{reviewsBean.reviewId}" />
+
+                                <div>
+                                    <h:outputLabel for="foodtruckSelect" value="Selecciona un Food Truck" styleClass="block text-textPrimary mb-2" />
+                                    <p:selectOneMenu id="foodtruckSelect" value="#{reviewsBean.selectedFoodTruck}" required="true" label="Food Truck">
+                                        <f:selectItem itemLabel="-- Selecciona --" itemValue="" />
+                                        <f:selectItems value="#{reviewsBean.foodTrucks}" var="ft" itemLabel="#{ft.nombre}" itemValue="#{ft.id}" />
+                                    </p:selectOneMenu>
+                                </div>
+
+                                <div>
+                                    <h:outputLabel for="rating" value="Calificación" styleClass="block text-textPrimary mb-2" />
+                                    <p:rating id="rating" value="#{reviewsBean.rating}" stars="5" cancel="true" required="true" />
+                                </div>
+
+                                <div>
+                                    <h:outputLabel for="reviewComment" value="Comentario" styleClass="block text-textPrimary mb-2" />
+                                    <p:inputTextarea id="reviewComment" value="#{reviewsBean.comentario}" rows="4"
+                                                     styleClass="w-full p-3 border rounded-lg focus:ring-2 focus:ring-secondary"
+                                                     placeholder="Cuéntanos tu experiencia..." required="true" />
+                                </div>
+
+                                <p:commandButton value="Enviar Reseña"
+                                                 action="#{reviewsBean.submitReview}"
+                                                 update=":reviewForm:reviewsContainer :reviewForm:messages :reviewForm" />
+
+                                <p:commandButton value="Cancelar" onclick="PF('reviewForm').clear(); return false;" type="button" />
+                            </div>
+
+                            <!-- Listado de reseñas -->
+                            <div>
+                                <h3 class="text-xl font-semibold text-primary mb-4">Reseñas Recientes</h3>
+                                <p:outputPanel id="reviewsContainer" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                                    <ui:repeat value="#{reviewsBean.latestReviews}" var="review">
+                                        <div class="bg-gray-50 p-4 rounded-lg">
+                                            <div class="flex justify-between items-start">
+                                                <h4 class="font-semibold">#{review.foodtruckNombre}</h4>
+                                                <div class="flex text-orange-400">
+                                                    <p:rating value="#{review.rating}" stars="5" readonly="true" cancel="false" />
+                                                </div>
+                                            </div>
+                                            <p class="mt-2 text-textSecondary">#{review.comentario}</p>
+                                            <div class="flex justify-between items-center mt-3 text-sm text-gray-500">
+                                                <span>Por: #{review.userName}</span>
+                                                <span>#{review.fecha}</span>
+                                            </div>
+                                            <p:commandButton value="Eliminar"
+                                                             action="#{reviewsBean.deleteReview(review.id)}"
+                                                             update=":reviewForm:reviewsContainer :reviewForm:messages" />
+
+
+
+                                            <p:commandButton value="Editar"
+                                                             action="#{reviewsBean.editReview(review)}"
+                                                             update=":reviewForm :reviewForm:messages"
+                                                             process="@this" />
+
+
+
+                                        </div>
+                                    </ui:repeat>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+
+                    </section>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

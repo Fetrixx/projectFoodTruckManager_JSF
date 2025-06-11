@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>FoodTruck Manager</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- Fuentes -->
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&amp;family=Poppins:wght@300;400;600&amp;display=swap" 
+              rel="stylesheet" />
+
+        <!-- Iconos -->
+        <link href="https://cdn.jsdelivr.net/npm/primeicons@4.1.0/primeicons.css" rel="stylesheet"/>
+
+        <!-- CSS personalizado -->
+        <h:outputStylesheet library="css" name="styles.css" />
+
+        <ui:insert name="head" />
+    </h:head>
+
+    <h:body>
+        <!-- Barra de navegación -->
+        <ui:include src="/templates/navbar.xhtml" />
+
+        <!-- Contenido principal -->
+        <main class="container mx-auto px-4 py-8 flex-1">
+            <ui:insert name="content" />
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-6">
+            <div class="container mx-auto text-center">
+                &copy; 2025 FoodTruck Manager - Sistema de gestión para parques de food trucks
+            </div>
+        </footer>
+
+        <!-- Scripts de PrimeFaces -->
+        <h:outputScript library="primefaces" name="primefaces.js" />
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />
+
+        <!-- Inicialización de componentes -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Inicializar PrimeFaces correctamente
+                if (typeof PrimeFaces !== 'undefined') {
+                    PrimeFaces.init();
+                }
+            });
+        </script>
+    </h:body>
+</html>
