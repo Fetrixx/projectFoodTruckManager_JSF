@@ -9,9 +9,9 @@ import Models.FoodTruck;
 import jakarta.inject.Named;
 import java.io.Serializable;
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.faces.application.NavigationHandler;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import java.util.List;
 
@@ -20,22 +20,28 @@ import java.util.List;
  * @author Elias
  */
 @Named(value = "favoritesBean")
-@RequestScoped
+@ViewScoped
 public class FavoritesBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private List<FoodTruck> favoritos;
-    private int foodtruckIdToDelete;
-    private LoginBean loginBean;
+    @Inject
+    private FavoritoDao favoritoDao;
 
     @Inject
-    private FavoritoDao favoritoDao; // Asegúrate de tener esto configurado
+    private LoginBean loginBean;
+
+    private List<FoodTruck> favoritos;
+
+    private int foodtruckIdToDelete = -1;
 
     @PostConstruct
     public void init() {
-        // Cargar los favoritos del usuario
-        int userId = getCurrentUserId();
+        loadFavoritos();
+    }
+
+    public void loadFavoritos() {
+        int userId = loginBean.getUsuario().getId();
         favoritos = favoritoDao.getFavoritosByUsuarioIdWithDetails(userId);
     }
 
@@ -43,27 +49,22 @@ public class FavoritesBean implements Serializable {
         return favoritos;
     }
 
-    public void deleteFavorito(int foodtruckId) {
+    public void prepareDelete(int foodtruckId) {
         this.foodtruckIdToDelete = foodtruckId;
     }
 
     public void confirmDelete() {
-        // Eliminar favorito
-        favoritoDao.deleteFavorito(getCurrentUserId(), foodtruckIdToDelete);
-        // Recargar favoritos
-        init();
+        if (foodtruckIdToDelete != -1) {
+            int userId = loginBean.getUsuario().getId();
+            boolean deleted = favoritoDao.deleteFavorito(userId, foodtruckIdToDelete);
+            FacesContext context = FacesContext.getCurrentInstance();
+            if (deleted) {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Food truck eliminado de favoritos."));
+            } else {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo eliminar el favorito."));
+            }
+            loadFavoritos();
+            foodtruckIdToDelete = -1;
+        }
     }
-
-    private int getCurrentUserId() {
-        int usuarioId = loginBean.getUsuario().getId();
-        // Implementa la lógica para obtener el ID del usuario actual
-        return usuarioId; // Placeholder
-    }
-
-    public void redirectToBooking(int foodtruckId) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        NavigationHandler nav = context.getApplication().getNavigationHandler();
-        nav.handleNavigation(context, null, "booking?foodtruck=" + foodtruckId);
-    }
-
 }

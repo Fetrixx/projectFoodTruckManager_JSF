@@ -21,17 +21,17 @@ import java.util.List;
  */
 @Named(value = "reviewsBean")
 @ViewScoped
-public class ReviewsBean implements Serializable{
+public class ReviewsBean implements Serializable {
 
     @Inject
     private ReviewDao reviewDAO;
 
     @Inject
     private FoodtruckDao foodtruckDAO;
-    
+
     @Inject
     private LoginBean loginBean;
-    
+
     private List<FoodTruck> foodTrucks;
 
     private List<Review> latestReviews;
@@ -55,7 +55,8 @@ public class ReviewsBean implements Serializable{
 
     @PostConstruct
     public void init() {
-        foodTrucks = foodtruckDAO.getAllFoodTrucks();
+        int usuarioId = loginBean.getUsuario().getId(); // Obtén el id del usuario actual
+        foodTrucks = foodtruckDAO.getAllFoodTrucks(usuarioId);
 
         loadLatestReviews();
     }
@@ -86,7 +87,8 @@ public class ReviewsBean implements Serializable{
 
     public void deleteReview(int reviewId) {
         int usuarioId = loginBean.getUsuario().getId();
-        reviewDAO.deleteReview(reviewId, usuarioId); // Ajusta usuarioId según contexto
+        System.out.println("usuario:" + usuarioId);
+        reviewDAO.deleteReview(reviewId, usuarioId);
         loadLatestReviews();
     }
 
@@ -141,10 +143,10 @@ public class ReviewsBean implements Serializable{
     public void setAction(String action) {
         this.action = action;
     }
-    
+
     public void cancelEdit() {
         resetFields();
-        action="create";
+        action = "create";
     }
 
 }

@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>Panel de Administración - Food Trucks</title>
+        <h:outputStylesheet library="css" name="styles.css" />
+        <style>
+            .admin-container {
+                max-width: 1200px;
+                margin: 2rem auto;
+                padding: 1rem;
+            }
+            .section-title {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: var(--primary);
+                margin-bottom: 1.5rem;
+                display: flex;
+                align-items: center;
+            }
+            .section-title i {
+                margin-right: 0.5rem;
+            }
+            .card {
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                margin-bottom: 2rem;
+                padding: 1rem;
+            }
+            .btn {
+                margin-right: 0.5rem;
+            }
+            /* Estilo para campos inválidos */
+            .ui-state-error {
+                border-color: #e57373 !important;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+        <ui:composition template="../templates/base.xhtml">
+            <ui:define name="title">Panel de Administración - Food Trucks</ui:define>
+
+            <ui:define name="content">
+                <h:form id="adminForm" class="admin-container">
+                    <h2 class="section-title">
+                        <i class="pi pi-home"></i>
+                        Panel de Administración - Food Trucks
+                    </h2>
+
+                    <p:messages id="messages" closable="true" /> <!-- autoUpdate="true" -->
+
+                    <!-- Botón Nuevo FoodTruck -->
+                    <p:commandButton value="Nuevo Food Truck" icon="pi pi-plus" 
+                                     action="#{adminBean.newFoodTruck}" 
+                                     update=":adminForm:foodtruckDialog" 
+                                     oncomplete="PF('foodtruckDialog').show()" 
+                                     styleClass="p-button-primary" />
+
+                    <!-- Tabla FoodTrucks -->
+                    <p:dataTable id="foodtruckTable" value="#{adminBean.foodTrucks}" var="ft" paginator="true" rows="10"
+                                 style="margin-top:1rem">
+                        <p:column headerText="ID" style="width: 50px;">#{ft.id}</p:column>
+                        <p:column headerText="Nombre">#{ft.nombre}</p:column>
+                        <p:column headerText="Ubicación">#{ft.ubicacion}</p:column>
+                        <p:column headerText="Horario">#{ft.horarioApertura} - #{ft.horarioCierre}</p:column>
+                        <p:column headerText="Acciones" style="width: 180px;">
+                            <p:commandButton icon="pi pi-pencil" title="Editar" 
+                                             action="#{adminBean.prepareEditFoodTruck(ft)}"
+                                             update=":adminForm:foodtruckDialog" 
+                                             oncomplete="PF('foodtruckDialog').show()"
+                                             styleClass="p-button-secondary p-button-sm"/>
+
+                            <p:commandButton icon="pi pi-trash" title="Eliminar" 
+                                             action="#{adminBean.deleteFoodTruck(ft)}" 
+                                             update=":adminForm:foodtruckTable :adminForm:messages :adminForm:menuPanel"
+                                             styleClass="p-button-danger p-button-sm" 
+                                             onclick="return confirm('¿Estás seguro de eliminar este food truck?');"/>
+                        </p:column>
+                    </p:dataTable>
+
+                    <!-- Diálogo FoodTruck -->
+                    <p:dialog id="foodtruckDialog" header="Food Truck" widgetVar="foodtruckDialog" modal="true" resizable="false" width="600">
+                        <h:panelGrid columns="2" columnClasses="label,value" style="width:100%" cellpadding="5">
+                            <h:outputLabel for="nombre" value="Nombre *" />
+                            <p:inputText id="nombre" value="#{adminBean.selectedFoodTruck.nombre}" required="true" />
+
+                            <h:outputLabel for="descripcion" value="Descripción" />
+                            <p:inputTextarea id="descripcion" value="#{adminBean.selectedFoodTruck.descripcion}" rows="3" />
+
+                            <h:outputLabel for="ubicacion" value="Ubicación *" />
+                            <p:inputText id="ubicacion" value="#{adminBean.selectedFoodTruck.ubicacion}" required="true" />
+
+                            <h:outputLabel for="lat" value="Latitud" />
+                            <p:inputText id="lat" value="#{adminBean.selectedFoodTruck.lat}" />
+
+                            <h:outputLabel for="lng" value="Longitud" />
+                            <p:inputText id="lng" value="#{adminBean.selectedFoodTruck.lng}" />
+
+                            <h:outputLabel for="horarioApertura" value="Horario Apertura *" />
+                            <p:inputText id="horarioApertura" value="#{adminBean.selectedFoodTruck.horarioApertura}" required="true" />
+
+                            <h:outputLabel for="horarioCierre" value="Horario Cierre *" />
+                            <p:inputText id="horarioCierre" value="#{adminBean.selectedFoodTruck.horarioCierre}" required="true" />
+
+                            <h:outputLabel for="imagen" value="URL Imagen" />
+                            <p:inputText id="imagen" value="#{adminBean.selectedFoodTruck.imagen}" />
+                        </h:panelGrid>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Guardar" 
+                                             action="#{adminBean.saveFoodTruck}" 
+                                             update=":adminForm:foodtruckTable :adminForm:messages :adminForm:menuPanel"
+                                             oncomplete="if(!args.validationFailed) PF('foodtruckDialog').hide()" 
+                                             styleClass="p-button-primary" />
+                            <p:commandButton value="Cancelar" onclick="PF('foodtruckDialog').hide()" 
+                                             type="button" styleClass="p-button-secondary" />
+                        </f:facet>
+                    </p:dialog>
+
+                    <!-- Menú del FoodTruck -->
+                    <p:panel id="menuPanel" header="Menú del Food Truck" styleClass="card" 
+                             rendered="#{not empty adminBean.selectedFoodTruck and adminBean.selectedFoodTruck.id != 0}">
+                        <p:commandButton value="Nuevo Ítem" icon="pi pi-plus" 
+                                         action="#{adminBean.newMenuItem}" 
+                                         update=":adminForm:menuDialog" 
+                                         oncomplete="PF('menuDialog').show()" 
+                                         styleClass="p-button-primary" />
+
+                        <p:dataTable id="menuTable" value="#{adminBean.selectedFoodTruck.menu}" var="menuItem" paginator="true" rows="10" style="margin-top:1rem">
+                            <p:column headerText="Nombre">#{menuItem.nombre}</p:column>
+                            <p:column headerText="Descripción">#{menuItem.descripcion}</p:column>
+                            <p:column headerText="Precio" style="width: 100px;">
+                                <h:outputText value="#{menuItem.precio}">
+                                    <f:convertNumber type="currency" currencySymbol="€" locale="es_ES" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Acciones" style="width: 150px;">
+                                <p:commandButton icon="pi pi-pencil" title="Editar" 
+                                                 action="#{adminBean.selectMenuItem(menuItem)}" 
+                                                 update=":adminForm:menuDialog" 
+                                                 oncomplete="PF('menuDialog').show()" 
+                                                 styleClass="p-button-secondary p-button-sm" />
+
+                                <p:commandButton icon="pi pi-trash" title="Eliminar" 
+                                                 action="#{adminBean.deleteMenuItem(menuItem)}" 
+                                                 update=":adminForm:menuTable :adminForm:messages"
+                                                 styleClass="p-button-danger p-button-sm" 
+                                                 onclick="return confirm('¿Estás seguro de eliminar este ítem?');" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+
+                    <!-- Diálogo Menú - QUITADO required PARA MANEJAR VALIDACIÓN MANUAL -->
+                    <p:dialog id="menuDialog" header="Ítem de Menú" widgetVar="menuDialog" modal="true" resizable="false" width="600">
+                        <h:panelGrid columns="2" columnClasses="label,value" style="width:100%" cellpadding="5">
+                            <h:outputLabel for="nombreMenu" value="Nombre *" />
+                            <p:inputText id="nombreMenu" value="#{adminBean.selectedMenuItem.nombre}" />
+
+                            <h:outputLabel for="descripcionMenu" value="Descripción" />
+                            <p:inputTextarea id="descripcionMenu" value="#{adminBean.selectedMenuItem.descripcion}" rows="3" />
+
+                            <h:outputLabel for="precio" value="Precio *" />
+                            <p:inputNumber id="precio" value="#{adminBean.selectedMenuItem.precio}" minValue="0" decimalPlaces="2" />
+
+                            <h:outputLabel for="imagenMenu" value="URL Imagen" />
+                            <p:inputText id="imagenMenu" value="#{adminBean.selectedMenuItem.imagen}" />
+                        </h:panelGrid>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Guardar" 
+                                             action="#{adminBean.saveMenuItem}" 
+                                             update=":adminForm:menuTable :adminForm:messages"
+                                             oncomplete="if(!args.validationFailed) PF('menuDialog').hide()" 
+                                             styleClass="p-button-primary" />
+                            <p:commandButton value="Cancelar" onclick="PF('menuDialog').hide()" 
+                                             type="button" styleClass="p-button-secondary" />
+                        </f:facet>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

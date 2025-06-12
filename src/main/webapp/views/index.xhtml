@@ -11,6 +11,9 @@
         <title>FoodTruck Manager - Inicio</title>
         <ui:insert name="head" />
         <h:outputStylesheet name="styles/global.css" /> <!-- Referencia al CSS global -->
+
+        <!-- Incluir el JS personalizado para favoritos -->
+        <h:outputScript name="favoritos.js" library="js" />
     </h:head>
 
     <h:body>
@@ -21,6 +24,12 @@
 
             <ui:define name="content">
                 <h:form id="mainForm">
+
+                    <!-- RemoteCommand para toggle favorito -->
+                    <p:remoteCommand name="toggleFavoritoRC" actionListener="#{indexBean.toggleFavorito}" update="mainForm">
+                        <f:param name="foodtruckId" value="" />
+                    </p:remoteCommand>
+
                     <div class="foodtruck-manager-container">
                         <!-- Sección de bienvenida -->
                         <div class="welcome-container card foodtruck-card p-8 mb-12">
@@ -44,61 +53,91 @@
                         </div>
 
                         <!-- Food Trucks Disponibles -->
-                        <section class="foodtrucks-section">
-                            <div class="section-title">
-                                <h2 class="foodtruck-heading">Food Trucks Disponibles</h2>
-                            </div>
+                        <section class="foodtruck-section foodtruck-mb-20">
+                            <h2 class="foodtruck-heading foodtruck-text-3xl foodtruck-text-primary foodtruck-mb-6 foodtruck-text-center">
+                                Food Trucks Disponibles
+                            </h2>
 
-                            <div class="foodtrucks-grid">
+                            <div id="foodtrucksContainer" class="foodtruck-grid foodtruck-md:grid-cols-2 foodtruck-lg:grid-cols-3 foodtruck-gap-6">
+                                <ui:fragment rendered="#{empty indexBean.foodTrucks}">
+                                    <div class="foodtruck-col-span-full foodtruck-text-center foodtruck-py-12">
+                                        <i class="material-icons foodtruck-text-5xl foodtruck-text-gray-300 foodtruck-mb-4">fastfood</i>
+                                        <p class="foodtruck-text-textSecondary">No hay food trucks registrados todavía</p>
+                                        <p class="foodtruck-mt-2 foodtruck-text-sm foodtruck-text-gray-500">Visita el panel de administración para agregar nuevos</p>
+                                    </div>
+                                </ui:fragment>
+
                                 <ui:repeat value="#{indexBean.foodTrucks}" var="ft">
-                                    <div class="card foodtruck-card">
-                                        <div class="card-image">
-                                            <p:graphicImage value="#{ft.imagen}" alt="#{ft.nombre}" rendered="#{not empty ft.imagen}" />
+                                    <div class="foodtruck-card foodtruck-bg-white foodtruck-rounded-lg foodtruck-shadow-md foodtruck-overflow-hidden foodtruck-hover:shadow-xl foodtruck-transition-all">
+                                        <div class="foodtruck-relative">
+                                            <p:graphicImage value="#{ft.imagen}" alt="#{ft.nombre}" 
+                                                            styleClass="foodtruck-w-full foodtruck-h-48 foodtruck-object-cover" 
+                                                            rendered="#{not empty ft.imagen}" />
                                             <h:panelGroup rendered="#{empty ft.imagen}">
-                                                <div class="bg-gray-200 border-2 border-dashed w-full h-full flex items-center justify-center">
-                                                    <i class="pi pi-image" style="font-size: 3rem; color: #9CA3AF;"></i>
+                                                <div class="foodtruck-bg-gray-200 foodtruck-border-2 foodtruck-border-dashed foodtruck-w-full foodtruck-h-48 foodtruck-flex foodtruck-items-center foodtruck-justify-center foodtruck-text-gray-400">
+                                                    Sin imagen
                                                 </div>
                                             </h:panelGroup>
 
+                                            <!-- Botón favorito -->
+                                            <button type="button" onclick="toggleFavorito(#{ft.id}, this)"
+                                                    class="foodtruck-absolute foodtruck-top-2 foodtruck-right-2 foodtruck-bg-white foodtruck-rounded-full foodtruck-p-2 foodtruck-shadow-md foodtruck-flex foodtruck-items-center foodtruck-justify-center"
+                                                    aria-label="#{ft.favorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}">
+                                                <i class="material-icons #{ft.favorito ? 'foodtruck-text-red-500' : 'foodtruck-text-gray-400'}">
+                                                    #{ft.favorito ? 'favorite' : 'favorite_border'}
+                                                </i>
+                                            </button>
                                         </div>
 
-                                        <div class="card-content">
-                                            <div class="flex justify-between items-start">
-                                                <h3 class="text-xl font-semibold">#{ft.nombre}</h3>
-                                                <span class="rating-badge bg-#{ft.avg_rating >= 4 ? 'green' : (ft.avg_rating >= 3 ? 'yellow' : 'red')}-100 text-#{ft.avg_rating >= 4 ? 'green' : (ft.avg_rating >= 3 ? 'yellow' : 'red')}-800 text-sm font-medium px-2.5 py-0.5 rounded">
-                                                    #{ft.avg_rating}
+                                        <div class="foodtruck-p-4">
+                                            <div class="foodtruck-flex foodtruck-justify-between foodtruck-items-start">
+                                                <h3 class="foodtruck-text-xl foodtruck-font-semibold">#{ft.nombre}</h3>
+                                                <span class="foodtruck-bg-#{ft.avg_rating >= 4 ? 'green' : (ft.avg_rating >= 3 ? 'yellow' : 'red')}-100 foodtruck-text-#{ft.avg_rating >= 4 ? 'green' : (ft.avg_rating >= 3 ? 'yellow' : 'red')}-800 foodtruck-text-sm foodtruck-font-medium foodtruck-px-2.5 foodtruck-py-0.5 foodtruck-rounded">
+                                                    #{ft.avg_rating != null ? ft.avg_rating : '0.0'}
                                                 </span>
                                             </div>
 
-                                            <ui:repeat value="#{[1,2,3,4,5]}" var="i">
-                                                <c:choose>
-                                                    <c:when test="#{i le ft.avgRating}">
-                                                        <i class="pi pi-star-fill" style="color: #F97316;"></i>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <i class="pi pi-star" style="color: #F97316;"></i>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </ui:repeat>
-
-                                            <div class="location">
-                                                <i class="pi pi-map-marker"></i>
-                                                <span>#{ft.ubicacion}</span>
+                                            <div class="foodtruck-flex foodtruck-items-center foodtruck-mt-1 foodtruck-mb-2 foodtruck-text-orange-400">
+                                                <p:rating value="#{ft.avgRatingInt}" readonly="true" stars="5" cancel="false" styleClass="foodtruck-rating-stars" />
+                                                <span class="foodtruck-text-sm foodtruck-text-gray-500 foodtruck-ml-2"> (#{ft.review_count} reseñas)</span>
                                             </div>
 
-                                            <p class="description">#{ft.descripcion}</p>
 
-                                            <div class="actions">
-                                                <p:link value="Ver menú" outcome="menu">
+                                            <div class="foodtruck-flex foodtruck-items-center foodtruck-text-sm foodtruck-text-gray-500 foodtruck-mb-2">
+                                                <i class="pi pi-map-marker foodtruck-mr-1"></i>
+                                                <span>#{ft.ubicacion != null and not ft.ubicacion.isEmpty() ? ft.ubicacion : 'Ubicación no especificada'}</span>
+                                            </div>
+
+                                            <p class="foodtruck-text-sm foodtruck-text-gray-600 foodtruck-mb-4 foodtruck-line-clamp-2">
+                                                #{ft.descripcion != null and not ft.descripcion.isEmpty() ? ft.descripcion : 'Sin descripción disponible'}
+                                            </p>
+
+                                            <div class="foodtruck-flex foodtruck-flex-wrap foodtruck-gap-2">
+                                                <p:link value="Ver menú" outcome="menu" styleClass="foodtruck-flex foodtruck-items-center foodtruck-text-primary foodtruck-hover:text-primary-dark">
                                                     <f:param name="foodtruck_id" value="#{ft.id}" />
-                                                    <i class="pi pi-book"></i>
+                                                    <i class="material-icons foodtruck-mr-1 foodtruck-text-sm">menu_book</i>
                                                 </p:link>
+                                                <p:commandButton value="Ver reseñas"
+                                                                 icon="pi pi-comments"
+                                                                 actionListener="#{indexBean.showReviews(ft.id)}"
+                                                                 update=":mainForm:reviewsDialogContent"
+                                                                 oncomplete="PF('reviewsDialog').show()"
+                                                                 styleClass="foodtruck-flex foodtruck-items-center foodtruck-text-secondary foodtruck-hover:text-orange-700" />
+
                                             </div>
                                         </div>
                                     </div>
                                 </ui:repeat>
                             </div>
                         </section>
+
+                        <!-- Diálogo para mostrar reseñas -->
+                        <p:dialog header="Reseñas" widgetVar="reviewsDialog" modal="true" closable="true" resizable="false" width="500">
+                            <h:panelGroup id="reviewsDialogContent" layout="block">
+                                <h:outputText value="#{indexBean.reviews}" escape="false" />
+                            </h:panelGroup>
+                        </p:dialog>
+
 
                         <!-- Funcionalidades Clave -->
                         <section class="functionalities-section">
@@ -140,13 +179,6 @@
                             </div>
                         </section>
                     </div>
-
-                    <!-- Dialogo para Reseñas -->
-                    <p:dialog header="Reseñas" widgetVar="reviewsDialog" modal="true">
-                        <h:panelGroup>
-                            <h:outputText value="#{indexBean.reviews}" escape="false"/>
-                        </h:panelGroup>
-                    </p:dialog>
                 </h:form>
             </ui:define>
         </ui:composition>

@@ -5,6 +5,7 @@
 package DAO;
 
 import Models.FoodTruck;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Elias
  */
+@ApplicationScoped
 public class FavoritoDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FavoritoDao.class);

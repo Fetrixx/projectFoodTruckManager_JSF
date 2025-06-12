@@ -3,62 +3,131 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-<h:head>
-    <title>Dashboard de Reservas</title>
-    <h:outputStylesheet name="styles/global.css" />
-</h:head>
+    <h:head>
+        <title>Dashboard de Reservas</title>
+        <h:outputStylesheet name="styles/global.css" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    </h:head>
 
-<h:body>
-    <ui:composition template="../templates/base.xhtml">
-        <ui:define name="title">
-            Dashboard de Reservas
-        </ui:define>
+    <h:body>
+        <ui:composition template="../templates/base.xhtml">
+            <ui:define name="title">
+                Dashboard de Reservas
+            </ui:define>
 
-        <ui:define name="content">
-            <h:form id="reservasForm">
-                <h2 class="text-center">Dashboard de Reservas</h2>
+            <ui:define name="content">
+                <h:form id="reservasForm">
 
-                <h:messages globalOnly="true" layout="table" />
 
-                <p:dataGrid value="#{reservaBean.reservas}" var="reserva" columns="3">
-                    <p:panel>
-                        <h:panelGrid columns="1">
-                            <h:outputText value="#{reserva.foodtruckId}" />
-                            <h:outputText value="#{reserva.fecha}" />
-                            <h:outputText value="#{reserva.hora}" />
-                            <h:outputText value="#{reserva.total}" />
-                            <h:outputText value="#{reserva.estado}" />
+                    <span style="display: flex; justify-content: space-between; margin-top: 1.5rem ">
+                        <h2 class="reserva-text-center reserva-mb-6">Dashboard de Reservas</h2>
+                        <p:commandButton value="Nueva Reserva" 
+                                         action="/views/booking?faces-redirect=true" 
+                                         icon="pi pi-plus"
+                                         style="height: fit-content"
+                                         styleClass="reserva-mb-4 bg-primary text-white" />
+                    </span>
 
-                            <p:commandButton value="Eliminar" 
-                                             action="#{reservaBean.deleteReserva(reserva.id)}" 
-                                             update="reservasForm" 
-                                             oncomplete="PF('successDialog').show();" />
-                            <p:commandButton value="Cancelar" 
-                                             action="#{reservaBean.cancelReserva(reserva.id)}" 
-                                             update="reservasForm" 
-                                             oncomplete="PF('successDialog').show();" />
-                            <p:commandButton value="Confirmar" 
-                                             action="#{reservaBean.completeReserva(reserva.id)}" 
-                                             update="reservasForm" 
-                                             oncomplete="PF('successDialog').show();" />
-                        </h:panelGrid>
-                    </p:panel>
-                </p:dataGrid>
+                    <h:messages globalOnly="true" layout="table" />
 
-                <h:panelGroup rendered="#{empty reservaBean.reservas}">
-                    <h:outputText value="No hay reservas registradas." />
-                </h:panelGroup>
+                    <ui:repeat value="#{reservaBean.reservas}" var="reserva">
+                        <div class="reserva-card">
+                            <!-- 1. Encabezado principal -->
+                            <div class="reserva-flex-space-between reserva-mb-2">
+                                <h3 class="reserva-font-semibold reserva-text-xl reserva-text-gray-800">
+                                    #{reservaBean.getFoodtruckName(reserva.id)}
+                                </h3>
+                                <span class="reserva-status-badge reserva-badge-#{reserva.estado} px-3 py-1 rounded-full reserva-text-sm">
+                                    #{reserva.estado}
+                                </span>
+                            </div>
+                            <p class="reserva-text-gray-500 reserva-text-sm reserva-mb-4">ID: #{reserva.id}</p>
 
-                <p:dialog header="Éxito" widgetVar="successDialog" modal="true" closable="true">
-                    <h:outputText value="Operación realizada con éxito." />
-                    <p:commandButton value="Cerrar" 
-                                     onclick="PF('successDialog').hide();" 
-                                     type="button" />
-                </p:dialog>
-            </h:form>
-        </ui:define>
-    </ui:composition>
-</h:body>
+                            <!-- 2. Usuario y fecha/hora -->
+                            <div class="reserva-flex reserva-flex-gap-6 reserva-mb-4 reserva-text-gray-600">
+                                <div class="reserva-flex reserva-items-center">
+                                    <i class="material-icons mr-2 reserva-text-sm">person</i>
+                                    <span>#{reserva.usuarioNombre}</span>
+                                </div>
+                                <div class="reserva-flex reserva-items-center">
+                                    <i class="material-icons mr-2 reserva-text-sm">schedule</i>
+                                    <span>#{reserva.fecha} #{reserva.hora}</span>
+                                </div>
+                            </div>
+
+                            <!-- 3. Lista de items -->
+                            <div class="reserva-mb-4">
+                                <p class="reserva-font-medium reserva-text-gray-700 reserva-mb-2 reserva-flex reserva-items-center">
+                                    <i class="material-icons mr-2 reserva-text-sm">list</i>
+                                    Items:
+                                </p>
+                                <div class="reserva-item-list pl-2">
+                                    <ul class="space-y-2">
+                                        <ui:repeat value="#{reservaBean.getItemsForReserva(reserva.id)}" var="item">
+                                            <li class="reserva-flex reserva-flex-space-between reserva-items-center reserva-bg-gray-50 reserva-rounded-lg p-3">
+                                                <div>
+                                                    <span class="reserva-font-medium">#{item.menuNombre}</span>
+                                                    <p class="reserva-text-xs reserva-text-gray-500 mt-1">
+                                                        <!-- Descripción no disponible en ReservaItem -->
+                                                    </p>
+                                                </div>
+                                                <div class="reserva-text-right">
+                                                    <span class="block reserva-font-semibold">
+                                                        $#{item.precioUnitario * item.cantidad}
+                                                    </span>
+                                                    <span class="reserva-text-xs reserva-text-gray-500">
+                                                        #{item.cantidad} x $#{item.precioUnitario}
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        </ui:repeat>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 4. Total y botones -->
+                            <div class="reserva-flex reserva-flex-space-between reserva-items-center reserva-border-t pt-4">
+                                <p class="reserva-font-bold">Total: $#{reserva.total}</p>
+                                <div class="reserva-space-x-2">
+                                    <p:commandButton value="Eliminar" 
+                                                     action="#{reservaBean.deleteReserva(reserva.id)}" 
+                                                     update="reservasForm"
+                                                     styleClass="reserva-btn-delete reserva-btn" />
+
+                                    <p:commandButton value="Cancelar" 
+                                                     action="#{reservaBean.cancelReserva(reserva.id)}" 
+                                                     update="reservasForm"
+                                                     styleClass="reserva-btn-cancel reserva-btn"
+                                                     rendered="#{reserva.estado != 'cancelada'}" />
+
+                                    <p:commandButton value="Confirmar" 
+                                                     action="#{reservaBean.completeReserva(reserva.id)}" 
+                                                     update="reservasForm"
+                                                     styleClass="reserva-btn-confirm reserva-btn"
+                                                     rendered="#{reserva.estado == 'pendiente'}" />
+                                </div>
+                            </div>
+                        </div>
+                    </ui:repeat>
+
+                    <h:panelGroup rendered="#{empty reservaBean.reservas}">
+                        <div class="reserva-text-center py-8 reserva-text-gray-500">
+                            No hay reservas registradas.
+                        </div>
+                    </h:panelGroup>
+
+                    <p:dialog header="Éxito" widgetVar="successDialog" modal="true" closable="true">
+                        <h:outputText value="Operación realizada con éxito." />
+                        <p:commandButton value="Cerrar" 
+                                         onclick="PF('successDialog').hide();" 
+                                         styleClass="reserva-mt-4 bg-primary text-white"
+                                         type="button" />
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
 </html>

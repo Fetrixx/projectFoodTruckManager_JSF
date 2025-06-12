@@ -1,11 +1,153 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
     <h:head>
-        <title>Facelet Title</title>
+        <title>Menú de #{menuBean.foodtruck.nombre}</title>
+        <h:outputStylesheet>
+            /* Estilos exclusivos para la página menú */
+            .menu-page .menu-container {
+            max-width: 768px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+            }
+
+            .menu-page .menu-title {
+            font-size: 2rem;
+            color: #D97706; /* color primary naranja */
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .menu-page .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            }
+
+            .menu-page .menu-item-card {
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            transition: box-shadow 0.3s ease;
+            background: #fff;
+            }
+
+            .menu-page .menu-item-card:hover {
+            box-shadow: 0 4px 8px rgba(249, 115, 22, 0.3);
+            }
+
+            .menu-page .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+            }
+
+            .menu-page .menu-item-name {
+            font-weight: 600;
+            font-size: 1.125rem;
+            }
+
+            .menu-page .menu-item-price {
+            color: #B45309; /* color secondary naranja oscuro */
+            font-weight: 600;
+            }
+
+            .menu-page .menu-item-desc {
+            color: #6B7280; /* texto secundario gris */
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            }
+
+            .menu-page .menu-item-image {
+            width: 100%;
+            height: 8rem;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            }
+
+            .menu-page .menu-item-no-image {
+            background: #E5E7EB;
+            border: 2px dashed #D1D5DB;
+            border-radius: 0.5rem;
+            width: 100%;
+            height: 8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9CA3AF;
+            font-size: 1rem;
+            }
+
+            .menu-page .no-menu-message {
+            text-align: center;
+            padding: 3rem 0;
+            color: #9CA3AF;
+            font-size: 1.125rem;
+            }
+
+            .menu-page .material-icons {
+            font-size: 3rem;
+            color: #D1D5DB;
+            margin-bottom: 1rem;
+            }
+        </h:outputStylesheet>
     </h:head>
+
     <h:body>
-        Hello from Facelets
+
+        <ui:composition template="../templates/base.xhtml">
+            <ui:define name="title">Mis Favoritos - FoodTruck Manager</ui:define>
+
+            <ui:define name="content">
+                <h:form>
+                    <section class="menu-page menu-container">
+                        <h2 class="menu-title">Menú de #{menuBean.foodtruck.nombre}</h2>
+
+                        <div class="menu-grid" id="menuContainer">
+                            <ui:fragment rendered="#{not empty menuBean.menu}">
+                                <ui:repeat value="#{menuBean.menu}" var="item">
+                                    <div class="menu-item-card">
+                                        <div class="menu-item-header">
+                                            <h3 class="menu-item-name">#{item.nombre}</h3>
+                                            <span class="menu-item-price">$#{item.precio}</span>
+                                        </div>
+                                        <p class="menu-item-desc">#{item.descripcion}</p>
+
+                                        <h:panelGroup rendered="#{not empty item.imagen}">
+                                            <p:graphicImage value="#{item.imagen}" alt="#{item.nombre}" styleClass="menu-item-image" />
+                                        </h:panelGroup>
+                                        <h:panelGroup rendered="#{empty item.imagen}">
+                                            <div class="menu-item-no-image">
+                                                <i class="material-icons">fastfood</i>
+                                                Sin imagen
+                                            </div>
+                                        </h:panelGroup>
+                                    </div>
+                                </ui:repeat>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{empty menuBean.menu}">
+                                <div class="no-menu-message">
+                                    <i class="material-icons">fastfood</i>
+                                    <p>Este food truck no tiene menú disponible</p>
+                                </div>
+                            </ui:fragment>
+                        </div>
+                    </section>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+
     </h:body>
 </html>

@@ -1,11 +1,192 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
     <h:head>
-        <title>Facelet Title</title>
+        <title>Nuevo Pedido</title>
     </h:head>
+
     <h:body>
-        Hello from Facelets
+        <ui:composition template="../templates/base.xhtml">
+            <ui:define name="title">
+                Nuevo Pedido
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="bookingForm">
+                    <h2 class="font-heading text-3xl text-primary mb-6 text-center">Reserva tu Turno</h2>
+
+                    <div class="step-indicator">
+                        <div class="step #{bookingBean.currentStep == 1 ? 'active' : ''}">1. Selección</div>
+                        <div class="step #{bookingBean.currentStep == 2 ? 'active' : ''}">2. Pedido</div>
+                        <div class="step #{bookingBean.currentStep == 3 ? 'active' : ''}">3. Confirmación</div>
+                    </div>
+
+                    <!-- Paso 1: Selección de Food Truck -->
+                    <div class="step-container #{bookingBean.currentStep == 1 ? 'active' : ''}">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold">Selecciona tu Food Truck</h3>
+                            <p:commandButton value="Ver Dashboard" action="/views/reservas?faces-redirect=true" icon="pi pi-home" />
+                        </div>
+                        <div class="foodtruck-grid">
+                            <ui:repeat value="#{bookingBean.foodTrucks}" var="foodTruck">
+                                <div class="card-foodtruck" 
+                                     onclick="selectFoodTruckCommand(#{foodTruck.id})" 
+                                     style="cursor:pointer;">
+                                    <div class="flex items-start">
+                                        <div class="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 flex-shrink-0"></div>
+                                        <div class="ml-4 flex-grow">
+                                            <h4 class="font-semibold text-lg">#{foodTruck.nombre}</h4>
+                                            <p class="text-gray-600 text-sm mt-1">#{foodTruck.descripcion}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                        </div>
+                    </div> 
+
+                    <!-- Paso 2: Realizar pedido -->
+                    <div class="step-container #{bookingBean.currentStep == 2 ? 'active' : ''}">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold text-center flex-grow">Realiza tu pedido</h3>
+                        </div>
+                        <div class="menu-grid">
+                            <div class="menu-items space-y-4">
+                                <ui:repeat value="#{bookingBean.menuItems}" var="menuItem">
+                                    <div class="menu-item">
+                                        <div class="flex items-center" style=" justify-content: space-between; width: 100%;">
+                                            <div class="ml-4 flex-grow">
+                                                <h4 class="font-semibold">#{menuItem.nombre}</h4>
+                                                <p class="text-textSecondary text-sm">#{menuItem.descripcion}</p>
+                                                <p class="text-secondary font-semibold mt-1">$#{menuItem.precio}</p>
+                                            </div>
+
+                                            <!-- integerOnly="true" -->
+                                            <p:inputNumber value="#{bookingBean.quantities[menuItem.id]}" 
+                                                           decimalPlaces="0"
+                                                           minValue="0">
+                                                <p:ajax event="change" 
+                                                        listener="#{bookingBean.updateCart}" 
+                                                        update=":bookingForm:cart-items-container 
+                                                        :bookingForm:cart-total 
+                                                        :bookingForm:confirm-button-container"/>
+                                            </p:inputNumber>
+                                        </div>
+                                    </div>
+                                </ui:repeat>
+                            </div>
+
+                            <div class="resumen-pedido">
+                                <h4 class="text-lg font-semibold mb-4">Tu orden</h4>
+                                <h:panelGroup id="cart-items-container" class="space-y-3 max-h-96 overflow-y-auto">
+                                    <ui:repeat value="#{bookingBean.menuItems}" var="item">
+                                          <ui:fragment rendered="#{bookingBean.quantities[item.id] != null and bookingBean.convertToInt(bookingBean.quantities[item.id]) > 0}">
+                                            <div class="flex justify-between items-start pb-2 border-b border-gray-200">
+                                                <div style="display: flex; flex-direction: row; align-items: center;">
+                                                    <p class="font-medium">#{item.nombre}</p> &nbsp;               
+                                                    <p class="text-sm text-textSecondary">x #{bookingBean.convertToInt(bookingBean.quantities[item.id])}</p>
+                                                </div>
+                                                <div class="text-right">         
+                                                    <p class="font-semibold">$#{item.precio * bookingBean.convertToInt(bookingBean.quantities[item.id])}</p>
+                                                    <p class="text-xs text-textSecondary">$#{item.precio} c/u</p>
+                                                </div>
+                                            </div>
+                                        </ui:fragment>
+                                    </ui:repeat>
+                                    <ui:fragment rendered="#{bookingBean.total == 0}">
+                                        <div class="empty-cart">No hay items en tu pedido</div>
+                                    </ui:fragment>
+                                </h:panelGroup>
+                                <div class="mt-6 pt-4 border-t">
+                                    <div class="flex justify-between font-semibold text-lg">
+                                        <span>Total:</span>
+                                        <h:outputText id="cart-total" value="$#{bookingBean.total}"/>
+                                    </div>
+                                    <div class="action-buttons">
+                                        <p:commandButton value="Atrás" action="#{bookingBean.goToStep(1)}" 
+                                                         update="@form" icon="pi pi-arrow-left" styleClass="flex-1" />
+
+                                        <h:panelGroup id="confirm-button-container">
+                                            <p:commandButton value="Confirmar" 
+                                                             action="#{bookingBean.confirmReservation}" 
+                                                             update="@form" 
+                                                             icon="pi pi-check"
+                                                             styleClass="flex-1"/>
+                                        </h:panelGroup>
+                                        <!-- Botón Confirmar siempre visible -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+
+                    <!-- Paso 3: Confirmación -->
+                    <div class="step-container #{bookingBean.currentStep == 3 ? 'active' : ''}">
+                        <h3 class="text-xl font-semibold mb-6 text-center">¡Reserva Confirmada!</h3>
+                        <div class="bg-gray-50 rounded-lg p-6 max-w-2xl mx-auto">
+                            <p class="mb-4 text-center">Gracias por tu reserva en <span class="font-semibold text-secondary">#{bookingBean.selectedFoodTruck.nombre}</span></p>
+
+                            <div class="mb-6 bg-white rounded-lg p-4 shadow-sm">
+                                <p class="font-semibold text-lg mb-3 text-center">Detalles de tu pedido:</p>
+                                <ul class="text-left">
+                                    <ui:repeat value="#{bookingBean.menuItems}" var="item">
+                                        <ui:fragment rendered="#{bookingBean.convertToInt(bookingBean.quantities[item.id]) > 0}">
+                                            <li class="flex justify-between py-2 border-b border-gray-100">
+                                                <div>               
+                                                    <span>#{bookingBean.convertToInt(bookingBean.quantities[item.id])} x #{item.nombre}</span>
+                                                    <p class="text-sm text-gray-500">#{item.descripcion}</p>
+                                                </div>            
+                                                <span class="font-semibold">$#{item.precio * bookingBean.convertToInt(bookingBean.quantities[item.id])}</span>
+                                            </li>
+                                        </ui:fragment>
+                                    </ui:repeat>
+                                </ul>
+                                <div class="flex justify-between border-t mt-3 pt-3 font-bold text-lg">
+                                    <span>Total:</span>
+                                    <span>$#{bookingBean.total}</span>
+                                </div>
+                            </div>
+
+                            <div class="qr-container">
+                                <h:graphicImage value="data:image/png;base64,#{bookingBean.qrCodeBase64}" 
+                                                rendered="#{not empty bookingBean.qrCodeBase64}" 
+                                                width="180" height="180" />
+                            </div>
+
+                            <p class="text-sm text-textSecondary mb-6 text-center">Presenta este código QR al food truck para reclamar tu pedido</p>
+
+                            <div class="confirmation-buttons">
+                                <p:commandButton value="Imprimir" icon="pi pi-print" onclick="window.print()" styleClass="bg-primary" />
+                                <p:commandButton value="Nueva Reserva" action="#{bookingBean.newReservation}" 
+                                                 update="@form" icon="pi pi-plus" styleClass="bg-secondary" />
+                                <p:commandButton value="Cerrar" action="#{bookingBean.close}" 
+                                                 icon="pi pi-times" styleClass="bg-gray-600" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mensajes y auto update dentro del mismo formulario -->
+                    <p:growl id="growl" showDetail="true" />
+                    <p:autoUpdate/>
+
+                    <p:remoteCommand name="selectFoodTruck" 
+                                     action="#{bookingBean.selectFoodTruckById}" 
+                                     update="@form">
+                        <f:param name="foodTruckId" value="" />
+                    </p:remoteCommand>
+
+                    <script>
+                        function selectFoodTruckCommand(id) {
+                            selectFoodTruck([{name: 'foodTruckId', value: id}]);
+                        }
+                    </script>
+                </h:form>
+            </ui:define>
+        </ui:composition>
     </h:body>
 </html>

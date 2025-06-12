@@ -25,33 +25,39 @@ public class FoodtruckDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioDao.class);
 
     // Obtener todos los food trucks con promedio y cantidad de reviews
-    public List<FoodTruck> getAllFoodTrucks() {
-        String sql = "SELECT ft.*, IFNULL(AVG(r.rating), 0) AS avg_rating, COUNT(r.id) AS review_count "
+    public List<FoodTruck> getAllFoodTrucks(int usuarioId) {
+        String sql = "SELECT ft.*, IFNULL(AVG(r.rating), 0) AS avg_rating, COUNT(r.id) AS review_count, "
+                + "CASE WHEN f.usuario_id IS NOT NULL THEN TRUE ELSE FALSE END AS favorito "
                 + "FROM foodtrucks ft "
                 + "LEFT JOIN reviews r ON r.foodtruck_id = ft.id "
-                + "GROUP BY ft.id "
+                + "LEFT JOIN favoritos f ON f.foodtruck_id = ft.id AND f.usuario_id = ? "
+                + "GROUP BY ft.id, f.usuario_id "
                 + "ORDER BY ft.nombre ASC";
 
         LOGGER.debug("SQL: {}", sql);
 
         List<FoodTruck> foodTrucks = new ArrayList<>();
-        try (Connection conn = Conexion.getConexion(); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+        try (Connection conn = Conexion.getConexion(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, usuarioId);
 
-            while (rs.next()) {
-                FoodTruck ft = new FoodTruck();
-                ft.setId(rs.getInt("id"));
-                ft.setNombre(rs.getString("nombre"));
-                ft.setDescripcion(rs.getString("descripcion"));
-                ft.setUbicacion(rs.getString("ubicacion"));
-                ft.setLat(rs.getDouble("lat"));
-                ft.setLng(rs.getDouble("lng"));
-                ft.setHorarioApertura(rs.getString("horario_apertura"));
-                ft.setHorarioCierre(rs.getString("horario_cierre"));
-                ft.setImagen(rs.getString("imagen"));
-                ft.setAvg_rating(rs.getDouble("avg_rating"));
-                ft.setReview_count(rs.getInt("review_count"));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    FoodTruck ft = new FoodTruck();
+                    ft.setId(rs.getInt("id"));
+                    ft.setNombre(rs.getString("nombre"));
+                    ft.setDescripcion(rs.getString("descripcion"));
+                    ft.setUbicacion(rs.getString("ubicacion"));
+                    ft.setLat(rs.getDouble("lat"));
+                    ft.setLng(rs.getDouble("lng"));
+                    ft.setHorarioApertura(rs.getString("horario_apertura"));
+                    ft.setHorarioCierre(rs.getString("horario_cierre"));
+                    ft.setImagen(rs.getString("imagen"));
+                    ft.setAvg_rating(rs.getDouble("avg_rating"));
+                    ft.setReview_count(rs.getInt("review_count"));
+                    ft.setFavorito(rs.getBoolean("favorito"));  // Asignar favorito
 
-                foodTrucks.add(ft);
+                    foodTrucks.add(ft);
+                }
             }
         } catch (SQLException e) {
             LOGGER.error("Error obteniendo todos los food trucks", e);

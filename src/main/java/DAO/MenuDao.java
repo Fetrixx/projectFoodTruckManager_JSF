@@ -5,6 +5,7 @@
 package DAO;
 
 import Models.MenuItem;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import java.util.List;
  *
  * @author Elias
  */
+@ApplicationScoped
 public class MenuDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MenuDao.class);

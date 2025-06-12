@@ -6,6 +6,7 @@ package DAO;
 
 import Models.Reserva;
 import Models.ReservaItem;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Elias
  */
+@ApplicationScoped
 public class ReservaDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservaDao.class);

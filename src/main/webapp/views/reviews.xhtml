@@ -79,7 +79,9 @@
                                             </div>
                                             <p:commandButton value="Eliminar"
                                                              action="#{reviewsBean.deleteReview(review.id)}"
-                                                             update=":reviewForm:reviewsContainer :reviewForm:messages" />
+                                                             update=":reviewForm:reviewsContainer :reviewForm:messages" 
+                                                             process="@this" 
+                                                             />
 
 
 

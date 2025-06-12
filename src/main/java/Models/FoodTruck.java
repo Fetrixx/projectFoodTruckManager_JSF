@@ -4,13 +4,14 @@
  */
 package Models;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author Elias
  */
-public class FoodTruck {
+public class FoodTruck  implements Serializable{
 
     private int id;
     private String nombre;
@@ -23,8 +24,17 @@ public class FoodTruck {
     private String imagen;
     private double avg_rating;
     private int review_count;
-    
-       // Lista de menús asociados
+    private boolean favorito;
+
+    public boolean isFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(boolean favorito) {
+        this.favorito = favorito;
+    }
+
+    // Lista de menús asociados
     private List<MenuItem> menu;
 
     public List<MenuItem> getMenu() {
@@ -123,4 +133,8 @@ public class FoodTruck {
         this.imagen = imagen;
     }
 
+    public int getAvgRatingInt() {
+        return (int) Math.round(this.avg_rating);
+    }
+    
 }
