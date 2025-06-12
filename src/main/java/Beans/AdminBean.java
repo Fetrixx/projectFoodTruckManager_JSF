@@ -27,15 +27,17 @@ import java.util.logging.Logger;
 @ViewScoped
 public class AdminBean implements Serializable {
 
-    
     private static final Logger logger = Logger.getLogger(AdminBean.class.getName());
 
-    @Inject private FoodtruckDao foodtruckDao;
-    @Inject private MenuDao menuDao;
-    
+    @Inject
+    private FoodtruckDao foodtruckDao;
+    @Inject
+    private MenuDao menuDao;
+
     private List<FoodTruck> foodTrucks;
     private FoodTruck selectedFoodTruck;
     private MenuItem selectedMenuItem;
+    private boolean firstLoad = true;
 
     @PostConstruct
     public void init() {
@@ -49,6 +51,7 @@ public class AdminBean implements Serializable {
 
     public void loadFoodTrucks() {
         foodTrucks = foodtruckDao.getAllFoodTrucks(0);
+        firstLoad = false;
     }
 
     public List<FoodTruck> getFoodTrucks() {
@@ -74,7 +77,7 @@ public class AdminBean implements Serializable {
     public void saveFoodTruck() {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
-            
+
             if (selectedFoodTruck.getId() == 0) {
                 int newId = foodtruckDao.createFoodTruck(selectedFoodTruck);
                 if (newId > 0) {
@@ -90,8 +93,8 @@ public class AdminBean implements Serializable {
             loadFoodTrucks();
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error al guardar food truck", e);
-            FacesContext.getCurrentInstance().addMessage(null, 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
         }
     }
 
@@ -99,10 +102,9 @@ public class AdminBean implements Serializable {
         try {
             boolean success = foodtruckDao.deleteFoodTruck(ft.getId());
             if (success) {
-                FacesContext.getCurrentInstance().addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Food Truck eliminado"));
-                
-                // Reiniciar solo si es el seleccionado
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Food Truck eliminado"));
+
                 if (selectedFoodTruck != null && selectedFoodTruck.getId() == ft.getId()) {
                     selectedFoodTruck = new FoodTruck();
                 }
@@ -110,60 +112,66 @@ public class AdminBean implements Serializable {
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error al eliminar food truck", e);
-            FacesContext.getCurrentInstance().addMessage(null, 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
         }
     }
 
     public void saveMenuItem() {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
-            
+
             // Validación manual para evitar errores prematuros
             if (selectedMenuItem.getNombre() == null || selectedMenuItem.getNombre().isEmpty()) {
-                context.addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El nombre es requerido"));
+                context.addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El nombre es requerido"));
                 return;
             }
-            
+
             if (selectedMenuItem.getPrecio() <= 0) {
-                context.addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El precio debe ser mayor que 0"));
+                context.addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El precio debe ser mayor que 0"));
                 return;
             }
 
             if (selectedMenuItem.getId() == 0) {
                 int newId = menuDao.createMenuItem(
-                    selectedFoodTruck.getId(),
-                    selectedMenuItem.getNombre(),
-                    selectedMenuItem.getDescripcion(),
-                    selectedMenuItem.getPrecio(),
-                    selectedMenuItem.getImagen()
+                        selectedFoodTruck.getId(),
+                        selectedMenuItem.getNombre(),
+                        selectedMenuItem.getDescripcion(),
+                        selectedMenuItem.getPrecio(),
+                        selectedMenuItem.getImagen()
                 );
                 if (newId > 0) {
                     selectedMenuItem.setId(newId);
-                    context.addMessage(null, 
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Ítem creado"));
+                    context.addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Ítem creado"));
                 }
             } else {
                 boolean success = menuDao.updateMenuItem(
-                    selectedMenuItem.getId(),
-                    selectedMenuItem.getNombre(),
-                    selectedMenuItem.getDescripcion(),
-                    selectedMenuItem.getPrecio(),
-                    selectedMenuItem.getImagen()
+                        selectedMenuItem.getId(),
+                        selectedMenuItem.getNombre(),
+                        selectedMenuItem.getDescripcion(),
+                        selectedMenuItem.getPrecio(),
+                        selectedMenuItem.getImagen()
                 );
                 if (success) {
-                    context.addMessage(null, 
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Ítem actualizado"));
+                    context.addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Ítem actualizado"));
                 }
             }
             // Actualizar menú del food truck
-            selectedFoodTruck.setMenu(menuDao.getMenuByFoodTruckId(selectedFoodTruck.getId()));
+            refreshMenu();
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error al guardar ítem de menú", e);
-            FacesContext.getCurrentInstance().addMessage(null, 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+        }
+    }
+
+    private void refreshMenu() {
+        if (selectedFoodTruck != null && selectedFoodTruck.getId() != 0) {
+            selectedFoodTruck.setMenu(menuDao.getMenuByFoodTruckId(selectedFoodTruck.getId()));
         }
     }
 
@@ -171,16 +179,16 @@ public class AdminBean implements Serializable {
         try {
             boolean success = menuDao.deleteMenuItem(item.getId());
             if (success) {
-                FacesContext.getCurrentInstance().addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Ítem eliminado"));
-                
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Ítem eliminado"));
+
                 // Actualizar menú del food truck
-                selectedFoodTruck.setMenu(menuDao.getMenuByFoodTruckId(selectedFoodTruck.getId()));
+                refreshMenu();
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error al eliminar ítem de menú", e);
-            FacesContext.getCurrentInstance().addMessage(null, 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
         }
     }
 
@@ -190,6 +198,7 @@ public class AdminBean implements Serializable {
         selectedFoodTruck.setHorarioCierre("22:00");
         selectedFoodTruck.setLat(0.0);
         selectedFoodTruck.setLng(0.0);
+        selectedMenuItem = new MenuItem();
     }
 
     public void newMenuItem() {
@@ -197,31 +206,17 @@ public class AdminBean implements Serializable {
     }
 
     public void prepareEditFoodTruck(FoodTruck ft) {
-        // Crear una copia para evitar problemas de serialización
-        selectedFoodTruck = new FoodTruck();
-        selectedFoodTruck.setId(ft.getId());
-        selectedFoodTruck.setNombre(ft.getNombre());
-        selectedFoodTruck.setDescripcion(ft.getDescripcion());
-        selectedFoodTruck.setUbicacion(ft.getUbicacion());
-        selectedFoodTruck.setLat(ft.getLat());
-        selectedFoodTruck.setLng(ft.getLng());
-        selectedFoodTruck.setHorarioApertura(ft.getHorarioApertura());
-        selectedFoodTruck.setHorarioCierre(ft.getHorarioCierre());
-        selectedFoodTruck.setImagen(ft.getImagen());
-        
-        // Cargar menú
-        selectedFoodTruck.setMenu(menuDao.getMenuByFoodTruckId(ft.getId()));
+        // Cargar datos completos del food truck
+        selectedFoodTruck = foodtruckDao.getFoodTruckById(ft.getId());
+        refreshMenu();
     }
-    
+
     public void selectMenuItem(MenuItem item) {
-        // Crear una copia para evitar problemas de serialización
-        selectedMenuItem = new MenuItem();
-        selectedMenuItem.setId(item.getId());
-        selectedMenuItem.setNombre(item.getNombre());
-        selectedMenuItem.setDescripcion(item.getDescripcion());
-        selectedMenuItem.setPrecio(item.getPrecio());
-        selectedMenuItem.setImagen(item.getImagen());
-        selectedMenuItem.setFoodtruckId(item.getFoodtruckId());
+        selectedMenuItem = item;
     }
-    
+
+    public boolean isFirstLoad() {
+        return firstLoad;
+    }
+
 }

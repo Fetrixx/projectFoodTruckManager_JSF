@@ -54,7 +54,7 @@
                         Panel de Administración - Food Trucks
                     </h2>
 
-                    <p:messages id="messages" closable="true" /> <!-- autoUpdate="true" -->
+                    <p:messages id="messages" closable="true"/>
 
                     <!-- Botón Nuevo FoodTruck -->
                     <p:commandButton value="Nuevo Food Truck" icon="pi pi-plus" 
@@ -73,20 +73,21 @@
                         <p:column headerText="Acciones" style="width: 180px;">
                             <p:commandButton icon="pi pi-pencil" title="Editar" 
                                              action="#{adminBean.prepareEditFoodTruck(ft)}"
-                                             update=":adminForm:foodtruckDialog" 
+                                             update=":adminForm:foodtruckDialog :adminForm:menuPanel"
                                              oncomplete="PF('foodtruckDialog').show()"
                                              styleClass="p-button-secondary p-button-sm"/>
 
                             <p:commandButton icon="pi pi-trash" title="Eliminar" 
                                              action="#{adminBean.deleteFoodTruck(ft)}" 
-                                             update=":adminForm:foodtruckTable :adminForm:messages :adminForm:menuPanel"
+                                             update=":adminForm:foodtruckTable :adminForm:messages"
                                              styleClass="p-button-danger p-button-sm" 
                                              onclick="return confirm('¿Estás seguro de eliminar este food truck?');"/>
                         </p:column>
                     </p:dataTable>
 
                     <!-- Diálogo FoodTruck -->
-                    <p:dialog id="foodtruckDialog" header="Food Truck" widgetVar="foodtruckDialog" modal="true" resizable="false" width="600">
+                    <p:dialog id="foodtruckDialog" header="Food Truck" widgetVar="foodtruckDialog" modal="true" 
+                              resizable="false" width="600" dynamic="true">
                         <h:panelGrid columns="2" columnClasses="label,value" style="width:100%" cellpadding="5">
                             <h:outputLabel for="nombre" value="Nombre *" />
                             <p:inputText id="nombre" value="#{adminBean.selectedFoodTruck.nombre}" required="true" />
@@ -124,16 +125,17 @@
                         </f:facet>
                     </p:dialog>
 
-                    <!-- Menú del FoodTruck -->
+                    <!-- Menú del FoodTruck - Usar rendered solo si no es primera carga -->
                     <p:panel id="menuPanel" header="Menú del Food Truck" styleClass="card" 
-                             rendered="#{not empty adminBean.selectedFoodTruck and adminBean.selectedFoodTruck.id != 0}">
+                             rendered="#{not adminBean.firstLoad and not empty adminBean.selectedFoodTruck and adminBean.selectedFoodTruck.id != 0}">
                         <p:commandButton value="Nuevo Ítem" icon="pi pi-plus" 
                                          action="#{adminBean.newMenuItem}" 
                                          update=":adminForm:menuDialog" 
                                          oncomplete="PF('menuDialog').show()" 
                                          styleClass="p-button-primary" />
 
-                        <p:dataTable id="menuTable" value="#{adminBean.selectedFoodTruck.menu}" var="menuItem" paginator="true" rows="10" style="margin-top:1rem">
+                        <p:dataTable id="menuTable" value="#{adminBean.selectedFoodTruck.menu}" var="menuItem" 
+                                     paginator="true" rows="10" style="margin-top:1rem">
                             <p:column headerText="Nombre">#{menuItem.nombre}</p:column>
                             <p:column headerText="Descripción">#{menuItem.descripcion}</p:column>
                             <p:column headerText="Precio" style="width: 100px;">
@@ -157,8 +159,9 @@
                         </p:dataTable>
                     </p:panel>
 
-                    <!-- Diálogo Menú - QUITADO required PARA MANEJAR VALIDACIÓN MANUAL -->
-                    <p:dialog id="menuDialog" header="Ítem de Menú" widgetVar="menuDialog" modal="true" resizable="false" width="600">
+                    <!-- Diálogo Menú -->
+                    <p:dialog id="menuDialog" header="Ítem de Menú" widgetVar="menuDialog" modal="true" 
+                              resizable="false" width="600" dynamic="true">
                         <h:panelGrid columns="2" columnClasses="label,value" style="width:100%" cellpadding="5">
                             <h:outputLabel for="nombreMenu" value="Nombre *" />
                             <p:inputText id="nombreMenu" value="#{adminBean.selectedMenuItem.nombre}" />
