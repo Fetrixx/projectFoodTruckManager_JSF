@@ -64,8 +64,15 @@
                                      styleClass="p-button-primary" />
 
                     <!-- Tabla FoodTrucks -->
-                    <p:dataTable id="foodtruckTable" value="#{adminBean.foodTrucks}" var="ft" paginator="true" rows="10"
-                                 style="margin-top:1rem">
+                    <p:dataTable id="foodtruckTable" value="#{adminBean.foodTrucks}" var="ft"
+                                 paginator="true" rows="10"
+                                 selection="#{adminBean.selectedFoodTruck}" selectionMode="single"
+                                 rowKey="#{ft.id}" style="margin-top:1rem">
+                        <p:ajax event="rowSelect" listener="#{adminBean.onFoodTruckSelect}" update=":adminForm:menuPanel :adminForm:messages" />
+
+
+
+                        <!--<p:column  selectionMode="single" style="width: 3em" />-->
                         <p:column headerText="ID" style="width: 50px;">#{ft.id}</p:column>
                         <p:column headerText="Nombre">#{ft.nombre}</p:column>
                         <p:column headerText="Ubicación">#{ft.ubicacion}</p:column>
@@ -127,7 +134,7 @@
 
                     <!-- Menú del FoodTruck - Usar rendered solo si no es primera carga -->
                     <p:panel id="menuPanel" header="Menú del Food Truck" styleClass="card" 
-                             rendered="#{not adminBean.firstLoad and not empty adminBean.selectedFoodTruck and adminBean.selectedFoodTruck.id != 0}">
+                             style="#{not adminBean.firstLoad and not empty adminBean.selectedFoodTruck and adminBean.selectedFoodTruck.id != 0 ? '' : 'display:none;'}">
                         <p:commandButton value="Nuevo Ítem" icon="pi pi-plus" 
                                          action="#{adminBean.newMenuItem}" 
                                          update=":adminForm:menuDialog" 
@@ -144,11 +151,17 @@
                                 </h:outputText>
                             </p:column>
                             <p:column headerText="Acciones" style="width: 150px;">
+
+
+
                                 <p:commandButton icon="pi pi-pencil" title="Editar" 
-                                                 action="#{adminBean.selectMenuItem(menuItem)}" 
+                                                 actionListener="#{adminBean.prepareEditMenuItem}" 
+                                                 process="@this" 
                                                  update=":adminForm:menuDialog" 
                                                  oncomplete="PF('menuDialog').show()" 
-                                                 styleClass="p-button-secondary p-button-sm" />
+                                                 styleClass="p-button-secondary p-button-sm">
+                                    <f:setPropertyActionListener target="#{adminBean.selectedMenuItem}" value="#{menuItem}" />
+                                </p:commandButton>
 
                                 <p:commandButton icon="pi pi-trash" title="Eliminar" 
                                                  action="#{adminBean.deleteMenuItem(menuItem)}" 
@@ -160,8 +173,10 @@
                     </p:panel>
 
                     <!-- Diálogo Menú -->
+                    <!--                    <p:dialog id="menuDialog" header="Ítem de Menú" widgetVar="menuDialog" modal="true" 
+                                                  resizable="false" width="600" dynamic="true">-->
                     <p:dialog id="menuDialog" header="Ítem de Menú" widgetVar="menuDialog" modal="true" 
-                              resizable="false" width="600" dynamic="true">
+                              resizable="false" width="600">
                         <h:panelGrid columns="2" columnClasses="label,value" style="width:100%" cellpadding="5">
                             <h:outputLabel for="nombreMenu" value="Nombre *" />
                             <p:inputText id="nombreMenu" value="#{adminBean.selectedMenuItem.nombre}" />

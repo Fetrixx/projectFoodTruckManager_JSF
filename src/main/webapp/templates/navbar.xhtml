@@ -27,39 +27,37 @@
             <p:menuitem value="Favoritos" outcome="favorites" icon="pi pi-star" styleClass="text-white" />
             <p:menuitem value="Reservas" outcome="reservas" icon="pi pi-calendar" styleClass="text-white" />
             <p:menuitem value="ADMIN PANEL" outcome="admin" icon="pi pi-calendar" styleClass="text-white" />
-<!--            <p:menuitem value="Acerca de mí" outcome="about" icon="pi pi-info-circle" styleClass="text-white" />-->
+            <!--            <p:menuitem value="Acerca de mí" outcome="about" icon="pi pi-info-circle" styleClass="text-white" />-->
 
             <!-- Enlaces externos -->
-<!--            <p:submenu label="Externos" icon="pi pi-external-link" styleClass="text-white">
-                <p:menuitem value="Blog" url="https://foodtruckmanager.blogspot.com" 
-                            icon="pi pi-link" target="_blank" styleClass="text-white" />
-                <p:menuitem value="Wordpress" url="http://localhost/wordpress/" 
-                            icon="pi pi-wordpress" target="_blank" styleClass="text-white" />
-            </p:submenu>-->
+            <!--            <p:submenu label="Externos" icon="pi pi-external-link" styleClass="text-white">
+                            <p:menuitem value="Blog" url="https://foodtruckmanager.blogspot.com" 
+                                        icon="pi pi-link" target="_blank" styleClass="text-white" />
+                            <p:menuitem value="Wordpress" url="http://localhost/wordpress/" 
+                                        icon="pi pi-wordpress" target="_blank" styleClass="text-white" />
+                        </p:submenu>-->
 
             <!-- Panel de administración -->
+
+            <!-- Admin Panel con icono y estilo -->
             <ui:fragment rendered="#{loginBean.admin}">
-                <p:menuitem value="Admin Panel"
-                            outcome="admin"
-                            icon="pi pi-cog"
-                            styleClass="admin-item" />
+                <p:menuitem outcome="admin" styleClass="admin-item" style="font-weight:600;">
+                    <f:facet name="icon">
+                        <i class="pi pi-shield" style="font-size: 1.2rem; color: #ffd54f;"></i>
+                    </f:facet>
+                    <h:outputText value="Admin Panel" style="color: #ffd54f; font-weight: 600;" />
+                </p:menuitem>
             </ui:fragment>
 
-            <!-- Sección derecha (usuario + logout) -->
+            <!-- Sección derecha: menú usuario -->
             <f:facet name="end">
-                <div class="flex items-center gap-4">
-                    <!-- Nombre de usuario -->
-                    <p:outputLabel value="#{sessionScope.username}" 
-                                  styleClass="text-white font-semibold" />
+                <p:menubar styleClass="custom-navbar shadow-lg">
+                    <p:menuitem value="#{sessionScope.username}" icon="pi pi-id-card" outcome="profile" />
 
-                    <!-- Logout -->
-                    <p:commandButton icon="pi pi-sign-out"
-                                     action="#{loginBean.logout}"
-                                     title="Cerrar sesión"
-                                     styleClass="ui-button-warning text-white"
-                                     style="border-radius: 20px; padding: 0.5rem 1rem;" />
-                </div>
+                    <p:menuitem value="Cerrar Sesión" icon="pi pi-sign-out" action="#{loginBean.logout}" />
+                </p:menubar>
             </f:facet>
+
         </p:menubar>
     </h:form>
 </ui:composition>

@@ -18,9 +18,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     --radius: 12px;
 }
 
-/* Importar fuentes */
-/*@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@300;400;600&display=swap');*/
-
 /* Reset y estilos base */
 * {
     margin: 0;
@@ -67,8 +64,11 @@ body {
     font-size: 1rem;
 }
 
-.custom-navbar .ui-menuitem-link:hover {
-    background-color: rgba(255, 255, 255, 0.15) !important;
+/* Hover naranja más intenso en items del navbar */
+.custom-navbar .ui-menuitem-link:hover,
+.custom-navbar .ui-menuitem-link:focus {
+    background-color: var(--secondary) !important; /* naranja */
+    color: white !important;
 }
 
 .custom-navbar .ui-menuitem-link .ui-menuitem-icon {
@@ -80,10 +80,6 @@ body {
     font-size: 1.5rem;
     font-weight: 400;
     letter-spacing: 0.5px;
-}
-
-.custom-navbar .ui-menuitem-link {
-    color: white !important; /* Texto blanco */
 }
 
 .custom-navbar .ui-menuitem-icon {
@@ -103,7 +99,35 @@ body {
 }
 
 .custom-navbar .ui-menu-child .ui-menuitem-link:hover {
-    background-color: rgba(255, 255, 255, 0.15) !important;
+    background-color: var(--secondary) !important;
+    color: white !important;
+}
+
+/* Dropdown menú de usuario: fondo oscuro y texto blanco */
+.custom-navbar .ui-menubar .ui-submenu-panel {
+    background-color: var(--primary) !important; /* rojo */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.5);
+    min-width: 180px;
+    padding: 0.25rem 0;
+}
+
+/* Items del dropdown: texto blanco */
+.custom-navbar .ui-menubar .ui-submenu-panel .ui-menuitem-link {
+    color: white !important;
+    padding: 0.5rem 1rem;
+}
+
+/* Hover en items del dropdown */
+.custom-navbar .ui-menubar .ui-submenu-panel .ui-menuitem-link:hover,
+.custom-navbar .ui-menubar .ui-submenu-panel .ui-menuitem-link:focus {
+    background-color: var(--secondary) !important; /* naranja */
+    color: white !important;
+}
+
+/* Iconos en dropdown también en blanco */
+.custom-navbar .ui-menubar .ui-submenu-panel .pi {
+    color: white !important;
 }
 
 /* Botón de logout */
@@ -146,6 +170,17 @@ body {
     color: #ffd54f !important;
     font-weight: 600 !important;
     background: rgba(0, 0, 0, 0.2) !important;
+}
+
+body .ui-menu {
+    padding: .25rem 0;
+    background: none;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+body .ui-menu .ui-menu-list .ui-menuitem.ui-menuitem-active>.ui-menuitem-link {
+    background: none;
 }
 
 /* ========== PÁGINA DE INICIO ========== */
@@ -1399,118 +1434,118 @@ body {
 
 
 /* Estilos exclusivos para favoritos */
-            .favoritos-page .favorites-container {
-            max-width: 1152px;
-            margin: 3rem auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 2rem;
-            }
-            .favoritos-page .favorites-title {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.875rem;
-            color: var(--primary);
-            margin-bottom: 2rem;
-            text-align: center;
-            font-weight: 700;
-            }
-            .favoritos-page .favorites-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            }
-            .favoritos-page .favorite-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 1rem;
-            transition: box-shadow 0.3s ease;
-            }
-            .favoritos-page .favorite-card:hover {
-            box-shadow: 0 4px 8px rgba(249, 115, 22, 0.3);
-            }
-            .favoritos-page .favorite-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-            }
-            .favoritos-page .favorite-image-wrapper {
-            width: 64px;
-            height: 64px;
-            background: #e5e7eb;
-            border: 2px dashed #d1d5db;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            flex-shrink: 0;
-            }
-            .favoritos-page .favorite-image {
-            width: 64px;
-            height: 64px;
-            object-fit: cover;
-            border-radius: 12px;
-            }
-            .favoritos-page .favorite-info {
-            margin-left: 1rem;
-            flex-grow: 1;
-            }
-            .favoritos-page .favorite-name {
-            font-weight: 600;
-            font-size: 1.125rem;
-            margin-bottom: 0.25rem;
-            }
-            .favoritos-page .favorite-description {
-            color: var(--textSecondary);
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            }
-            .favoritos-page .favorite-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            }
-            .favoritos-page .btn-delete {
-            color: #ef4444;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            border: none;
-            background: none;
-            transition: color 0.3s ease;
-            }
-            .favoritos-page .btn-delete:hover {
-            color: #b91c1c;
-            }
-            .favoritos-page .btn-reserve {
-            background-color: var(--secondary);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-            }
-            .favoritos-page .btn-reserve:hover {
-            background-color: #ea580c;
-            color: white;
-            text-decoration: none;
-            }
-            .favoritos-page .empty-message {
-            text-align: center;
-            color: #9CA3AF;
-            padding: 3rem 0;
-            }
-            .favoritos-page .empty-message i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            }
+.favoritos-page .favorites-container {
+    max-width: 1152px;
+    margin: 3rem auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 2rem;
+}
+.favoritos-page .favorites-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.875rem;
+    color: var(--primary);
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 700;
+}
+.favoritos-page .favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+.favoritos-page .favorite-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem;
+    transition: box-shadow 0.3s ease;
+}
+.favoritos-page .favorite-card:hover {
+    box-shadow: 0 4px 8px rgba(249, 115, 22, 0.3);
+}
+.favoritos-page .favorite-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.favoritos-page .favorite-image-wrapper {
+    width: 64px;
+    height: 64px;
+    background: #e5e7eb;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.favoritos-page .favorite-image {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+.favoritos-page .favorite-info {
+    margin-left: 1rem;
+    flex-grow: 1;
+}
+.favoritos-page .favorite-name {
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+}
+.favoritos-page .favorite-description {
+    color: var(--textSecondary);
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.favoritos-page .favorite-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.favoritos-page .btn-delete {
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border: none;
+    background: none;
+    transition: color 0.3s ease;
+}
+.favoritos-page .btn-delete:hover {
+    color: #b91c1c;
+}
+.favoritos-page .btn-reserve {
+    background-color: var(--secondary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+.favoritos-page .btn-reserve:hover {
+    background-color: #ea580c;
+    color: white;
+    text-decoration: none;
+}
+.favoritos-page .empty-message {
+    text-align: center;
+    color: #9CA3AF;
+    padding: 3rem 0;
+}
+.favoritos-page .empty-message i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}

@@ -18,6 +18,7 @@ import jakarta.faces.view.ViewScoped;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -219,4 +220,33 @@ public class AdminBean implements Serializable {
         return firstLoad;
     }
 
+    public void onFoodTruckSelect(SelectEvent<FoodTruck> event) {
+        FoodTruck selected = event.getObject();
+        if (selected != null) {
+            // Cargar datos completos y menú
+            selectedFoodTruck = foodtruckDao.getFoodTruckById(selected.getId());
+            System.out.println("selected: " + selectedFoodTruck.getNombre());
+            refreshMenu();
+            firstLoad = false;
+        }
+    }
+
+//    public void prepareEditMenuItem(MenuItem item) {
+//        System.out.println("item: " + item);
+//        System.out.println("item nom: " + item.getNombre());
+//        if (item != null && item.getId() != 0) {
+//            selectedMenuItem = menuDao.getMenuItemById(item.getId());
+//        } else {
+//            selectedMenuItem = new MenuItem();
+//        }
+//        // Limpia mensajes o estados si es necesario
+//        FacesContext.getCurrentInstance().getMessages().remove();
+//    }
+    public void prepareEditMenuItem() {
+        if (selectedMenuItem != null && selectedMenuItem.getId() != 0) {
+            selectedMenuItem = menuDao.getMenuItemById(selectedMenuItem.getId());
+        } else {
+            selectedMenuItem = new MenuItem();
+        }
+    }
 }
