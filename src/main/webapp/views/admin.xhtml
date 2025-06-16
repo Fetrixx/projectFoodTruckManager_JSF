@@ -12,7 +12,7 @@
         <style>
             .admin-container {
                 max-width: 1200px;
-                margin: 2rem auto;
+                margin: 1.5rem ;
                 padding: 1rem;
             }
             .section-title {
@@ -134,6 +134,7 @@
 
                     <!-- Menú del FoodTruck - Usar rendered solo si no es primera carga -->
                     <p:panel id="menuPanel" header="Menú del Food Truck" styleClass="card" 
+                             class="admin-card"
                              style="#{not adminBean.firstLoad and not empty adminBean.selectedFoodTruck and adminBean.selectedFoodTruck.id != 0 ? '' : 'display:none;'}">
                         <p:commandButton value="Nuevo Ítem" icon="pi pi-plus" 
                                          action="#{adminBean.newMenuItem}" 

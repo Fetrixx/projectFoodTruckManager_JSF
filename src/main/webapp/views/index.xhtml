@@ -39,11 +39,10 @@
                             <div class="info-box bg-orange-50 border border-orange-100 rounded-lg p-6 mb-6">
                                 <h2 class="foodtruck-heading text-secondary text-xl mb-4 text-center">¿Qué puedes hacer?</h2>
                                 <ul class="list-disc pl-6 space-y-2">
-                                    <li>Gestionar reservas de espacios</li>
-                                    <li>Controlar calendario de eventos</li>
-                                    <li>Administrar información de food trucks</li>
-                                    <li>Recibir comentarios de clientes</li>
-                                    <li>Generar reportes de desempeño</li>
+                                    <li>Gestionar reservas </li>
+                                    <li>Agregar FoodTrucks a Favoritos</li>
+                                    <li>Administrar información de food trucks y sus menus</li>
+                                    <li>Realizar Reseñas a los FoodTrucks</li>
                                 </ul>
                             </div>
 
@@ -53,7 +52,7 @@
                         </div>
 
                         <!-- Food Trucks Disponibles -->
-                        <section class="foodtruck-section foodtruck-mb-20">
+                        <section class="foodtruck-section foodtruck-mb-20" style="margin-top: 30px">
                             <h2 class="foodtruck-heading foodtruck-text-3xl foodtruck-text-primary foodtruck-mb-6 foodtruck-text-center">
                                 Food Trucks Disponibles
                             </h2>
@@ -92,7 +91,8 @@
                                         <div class="foodtruck-p-4">
                                             <div class="foodtruck-flex foodtruck-justify-between foodtruck-items-start">
                                                 <h3 class="foodtruck-text-xl foodtruck-font-semibold">#{ft.nombre}</h3>
-                                                <span class="foodtruck-bg-#{ft.avg_rating >= 4 ? 'green' : (ft.avg_rating >= 3 ? 'yellow' : 'red')}-100 foodtruck-text-#{ft.avg_rating >= 4 ? 'green' : (ft.avg_rating >= 3 ? 'yellow' : 'red')}-800 foodtruck-text-sm foodtruck-font-medium foodtruck-px-2.5 foodtruck-py-0.5 foodtruck-rounded">
+                                                <span style="border-radius: 10px; display: flex; justify-content: center;align-items: center;"
+                                                    class="foodtruck-bg-#{ft.avg_rating >= 4 ? 'green' : (ft.avg_rating >= 3 ? 'yellow' : 'red')}-100 foodtruck-text-#{ft.avg_rating >= 4 ? 'green' : (ft.avg_rating >= 3 ? 'yellow' : 'red')}-800 foodtruck-text-sm foodtruck-font-medium foodtruck-px-2.5 foodtruck-py-0.5 foodtruck-rounded">
                                                     #{ft.avg_rating != null ? ft.avg_rating : '0.0'}
                                                 </span>
                                             </div>
@@ -112,7 +112,7 @@
                                                 #{ft.descripcion != null and not ft.descripcion.isEmpty() ? ft.descripcion : 'Sin descripción disponible'}
                                             </p>
 
-                                            <div class="foodtruck-flex foodtruck-flex-wrap foodtruck-gap-2">
+                                            <div class="foodtruck-flex foodtruck-flex-wrap foodtruck-gap-2" style="justify-content: space-around">
                                                 <p:link value="Ver menú" outcome="menu" styleClass="foodtruck-flex foodtruck-items-center foodtruck-text-primary foodtruck-hover:text-primary-dark">
                                                     <f:param name="foodtruck_id" value="#{ft.id}" />
                                                     <i class="material-icons foodtruck-mr-1 foodtruck-text-sm">menu_book</i>
@@ -138,46 +138,6 @@
                             </h:panelGroup>
                         </p:dialog>
 
-
-                        <!-- Funcionalidades Clave -->
-                        <section class="functionalities-section">
-                            <div class="section-title">
-                                <h2 class="foodtruck-heading">Funcionalidades Clave</h2>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="card feature-card">
-                                    <i class="pi pi-calendar"></i>
-                                    <h3>Reserva de Turnos</h3>
-                                    <p>Sistema inteligente para evitar filas con horarios programados</p>
-                                </div>
-
-                                <div class="card feature-card">
-                                    <i class="pi pi-book"></i>
-                                    <h3>Menú Digital</h3>
-                                    <p>Catálogo con fotos y precios actualizados</p>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Funcionalidades Extra -->
-                        <section class="extra-features">
-                            <h2 class="foodtruck-heading">¡Funcionalidades Extra!</h2>
-
-                            <div class="extra-grid">
-                                <div class="extra-card">
-                                    <i class="pi pi-star"></i>
-                                    <h3>Sistema de Reseñas</h3>
-                                    <p>Califica tus food trucks favoritos y comparte tu experiencia</p>
-                                </div>
-
-                                <div class="extra-card">
-                                    <i class="pi pi-heart"></i>
-                                    <h3>Favoritos</h3>
-                                    <p>Guarda tus puestos preferidos para acceso rápido</p>
-                                </div>
-                            </div>
-                        </section>
                     </div>
                 </h:form>
             </ui:define>

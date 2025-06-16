@@ -9,55 +9,55 @@
     <h:form>
         <p:growl id="messages" showDetail="true" />
 
-        <!-- Barra de navegación con clase personalizada -->
-        <p:menubar styleClass="custom-navbar shadow-lg">
+        <!-- Contenedor principal para el navbar dividido en dos filas -->
+        <h:panelGroup style="width: 100%; background-color: #333; color: white;">
 
-            <!-- Logo con clase especial para fuente -->
-            <f:facet name="start">
-                <p:menuitem value="🍔 FoodTruck Park Manager"
-                            outcome="index"
-                            icon="pi pi-home"
-                            styleClass="logo font-heading text-white" /> <!-- Añadido text-white -->
-            </f:facet>
+            <!-- Primera fila: Nombre de la página (link) y menú usuario con fondo rojo -->
+            <h:panelGroup style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background-color: #ef4444;">
+                <!-- Nombre de la página como enlace -->
+                <h:outputLink value="index.xhtml" style="color: white; font-weight: bold; font-size: 1.5rem; text-decoration: none; font-family: 'Fredoka One', cursive;">
+                    🍔 FoodTruck Park Manager
+                </h:outputLink>
 
-            <!-- Menú principal -->
-            <p:menuitem value="Inicio" outcome="index" icon="pi pi-home" styleClass="text-white" />
-            <p:menuitem value="Contacto" outcome="contacto" icon="pi pi-envelope" styleClass="text-white" />
-            <p:menuitem value="Reseñas" outcome="reviews" icon="pi pi-comments" styleClass="text-white" />
-            <p:menuitem value="Favoritos" outcome="favorites" icon="pi pi-star" styleClass="text-white" />
-            <p:menuitem value="Reservas" outcome="reservas" icon="pi pi-calendar" styleClass="text-white" />
-            <p:menuitem value="ADMIN PANEL" outcome="admin" icon="pi pi-calendar" styleClass="text-white" />
-            <!--            <p:menuitem value="Acerca de mí" outcome="about" icon="pi pi-info-circle" styleClass="text-white" />-->
+                <!-- Menú usuario: perfil y logout en fila -->
+                <h:panelGroup style="display: flex; gap: 1rem; align-items: center;">
+                    <p:menuitem value="#{sessionScope.username}" icon="pi pi-id-card" outcome="profile"
+                                style="color: white; font-weight: normal; text-decoration: none;" />
+                    <p:menuitem value="Cerrar Sesión" icon="pi pi-sign-out" action="#{loginBean.logout}"
+                                style="color: white; font-weight: normal; text-decoration: none;" />
+                </h:panelGroup>
+            </h:panelGroup>
 
-            <!-- Enlaces externos -->
-            <!--            <p:submenu label="Externos" icon="pi pi-external-link" styleClass="text-white">
-                            <p:menuitem value="Blog" url="https://foodtruckmanager.blogspot.com" 
-                                        icon="pi pi-link" target="_blank" styleClass="text-white" />
-                            <p:menuitem value="Wordpress" url="http://localhost/wordpress/" 
-                                        icon="pi pi-wordpress" target="_blank" styleClass="text-white" />
-                        </p:submenu>-->
+            <!-- Segunda fila: Barra de navegación principal -->
+            <p:menubar styleClass="custom-navbar shadow-lg" style="background-color: #444;">
+                <p:menuitem value="Inicio" outcome="index" icon="pi pi-home" styleClass="text-white" />
+                <!--<p:menuitem value="Contacto" outcome="contacto" icon="pi pi-envelope" styleClass="text-white" />-->
+                <p:menuitem value="Reseñas" outcome="reviews" icon="pi pi-comments" styleClass="text-white" />
+                <p:menuitem value="Favoritos" outcome="favorites" icon="pi pi-star" styleClass="text-white" />
+                <p:menuitem value="Reservas" outcome="reservas" icon="pi pi-calendar" styleClass="text-white" />
+                <p:menuitem value="ADMIN PANEL" outcome="admin" icon="pi pi-calendar" styleClass="text-white" />
 
-            <!-- Panel de administración -->
+                <ui:fragment rendered="#{loginBean.admin}">
+                    <p:menuitem outcome="admin" styleClass="admin-item" style="font-weight:600;">
+                        <f:facet name="icon">
+                            <i class="pi pi-shield" style="font-size: 1.2rem; color: #ffd54f;"></i>
+                        </f:facet>
+                        <h:outputText value="Admin Panel" style="color: #ffd54f; font-weight: 600;" />
+                    </p:menuitem>
+                </ui:fragment>
 
-            <!-- Admin Panel con icono y estilo -->
-            <ui:fragment rendered="#{loginBean.admin}">
-                <p:menuitem outcome="admin" styleClass="admin-item" style="font-weight:600;">
-                    <f:facet name="icon">
-                        <i class="pi pi-shield" style="font-size: 1.2rem; color: #ffd54f;"></i>
-                    </f:facet>
-                    <h:outputText value="Admin Panel" style="color: #ffd54f; font-weight: 600;" />
-                </p:menuitem>
-            </ui:fragment>
 
-            <!-- Sección derecha: menú usuario -->
-            <f:facet name="end">
-                <p:menubar styleClass="custom-navbar shadow-lg">
-                    <p:menuitem value="#{sessionScope.username}" icon="pi pi-id-card" outcome="profile" />
+                <!-- Sección derecha: menú usuario -->
+                <f:facet name="end">
+                    <p:menubar styleClass="custom-navbar shadow-lg">
+                        <p:menuitem value="#{sessionScope.username}" icon="pi pi-id-card" outcome="favorites" /> <!-- outcome="profile"-->
 
-                    <p:menuitem value="Cerrar Sesión" icon="pi pi-sign-out" action="#{loginBean.logout}" />
-                </p:menubar>
-            </f:facet>
+                        <p:menuitem value="Cerrar Sesión" icon="pi pi-sign-out" action="#{loginBean.logout}" />
+                    </p:menubar>
+                </f:facet>
+            </p:menubar>
 
-        </p:menubar>
+        </h:panelGroup>
+
     </h:form>
 </ui:composition>

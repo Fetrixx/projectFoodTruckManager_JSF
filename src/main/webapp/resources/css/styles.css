@@ -1437,16 +1437,17 @@ body {
 .favoritos-page .favorites-container {
     max-width: 1152px;
     margin: 3rem auto;
+    margin-top: 20px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     padding: 2rem;
 }
 .favoritos-page .favorites-title {
-    font-family: 'Fredoka One', cursive;
+    /*font-family: 'Fredoka One', cursive;*/
     font-size: 1.875rem;
-    color: var(--primary);
-    margin-bottom: 2rem;
+    /*color: var(--primary);*/
+    margin-bottom: 1rem;
     text-align: center;
     font-weight: 700;
 }
@@ -1548,4 +1549,68 @@ body {
 .favoritos-page .empty-message i {
     font-size: 4rem;
     margin-bottom: 1rem;
+}
+
+/* ========== CORRECCIONES GLOBALES ========== */
+/* Normalización de prefijos */
+[class*="foodtruck-"] {
+    box-sizing: border-box;
+}
+
+/* Grid responsivo corregido */
+.foodtruck-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .foodtruck-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .foodtruck-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Clases de utilidad faltantes */
+.foodtruck-mb-20 { margin-bottom: 5rem; }
+.foodtruck-text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.foodtruck-text-primary { color: #EF4444; }
+.foodtruck-bg-white { background-color: #fff; }
+
+/* Corrección específica para tarjetas */
+.foodtruck-card {
+    transition: all 0.3s ease;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Corrección para estrellas de rating */
+.foodtruck-rating-stars .ui-rating-star {
+    color: #e5e7eb !important;
+    font-size: 1.25rem;
+}
+
+.foodtruck-rating-stars .ui-rating-star.ui-rating-star-on {
+    color: #F97316 !important;
+}
+
+/* Botones de favoritos corregidos */
+.foodtruck-absolute {
+    z-index: 10;
+}
+
+.page-title-font {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.875rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 700;
 }
